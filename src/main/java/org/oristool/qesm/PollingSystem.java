@@ -7,9 +7,13 @@ import org.oristool.models.stpn.trees.StochasticTransitionFeature;
 import org.oristool.petrinet.Marking;
 import org.oristool.petrinet.PetriNet;
 import org.oristool.petrinet.Place;
+import org.oristool.petrinet.Precondition;
 import org.oristool.petrinet.Transition;
 
 public class PollingSystem {
+
+  public static int numSystems = 0;
+
   public static void build(PetriNet net, Marking marking) {
 
     //Generating Nodes
@@ -128,5 +132,71 @@ public class PollingSystem {
     timeout2.addFeature(new Priority(0));
     timeout3.addFeature(StochasticTransitionFeature.newDeterministicInstance(new BigDecimal("3"), MarkingExpr.from("1", net)));
     timeout3.addFeature(new Priority(0));
+  }
+
+  public static void addSystem(PetriNet net, Marking marking) {
+    numSystems++;
+    
+    Place AtService = net.addPlace("AtService"+numSystems);
+    Place Idle = net.addPlace("Idle"+numSystems);
+    Place Vacant = net.addPlace("Vacant"+numSystems);
+    Place Waiting = net.addPlace("Waiting"+numSystems);
+    Transition arrive = net.addTransition("arrive"+numSystems);
+    Transition empty = net.addTransition("empty"+numSystems);
+    Transition serve = net.addTransition("serve"+numSystems);
+    Transition startService = net.addTransition("startService"+numSystems);
+    Transition timeout = net.addTransition("timeout"+numSystems);
+
+    //Generating Connectors
+    net.addInhibitorArc(Vacant, serve);
+    net.addInhibitorArc(Waiting, empty);
+    net.addPostcondition(arrive, Waiting);
+    net.addPostcondition(empty, Vacant);
+    net.addPrecondition(Vacant, startService);
+    net.addPrecondition(Idle, arrive);
+    net.addPostcondition(startService, AtService);
+    net.addPrecondition(AtService, timeout);
+    net.addPostcondition(timeout, Vacant);
+    net.addPrecondition(AtService, empty);
+    net.addPrecondition(Waiting, serve);
+    net.addPostcondition(serve, Idle);
+
+    //Generating Properties
+    marking.setTokens(AtService, 0);
+    marking.setTokens(Idle, 2);
+    marking.setTokens(Vacant, 1);
+    marking.setTokens(Waiting, 0);
+    arrive.addFeature(StochasticTransitionFeature.newExponentialInstance(new BigDecimal("1"), MarkingExpr.from("0.05", net)));
+    empty.addFeature(StochasticTransitionFeature.newDeterministicInstance(new BigDecimal("0"), MarkingExpr.from("1", net)));
+    empty.addFeature(new Priority(0));
+    serve.addFeature(StochasticTransitionFeature.newUniformInstance(new BigDecimal("0"), new BigDecimal("1")));
+    startService.addFeature(StochasticTransitionFeature.newUniformInstance(new BigDecimal("1"), new BigDecimal("2")));
+    timeout.addFeature(StochasticTransitionFeature.newDeterministicInstance(new BigDecimal("3"), MarkingExpr.from("1", net)));
+    timeout.addFeature(new Priority(0));
+
+    if (numSystems == 2) {
+      Place Polling = net.addPlace("Polling"+(numSystems-1));
+      net.addPostcondition(net.getTransition("timeout"+(numSystems-1)), Polling);
+      net.addPostcondition(net.getTransition("empty"+(numSystems-1)), Polling);
+      net.addPrecondition(Polling, net.getTransition("startService"+(numSystems)));
+    }
+    if (numSystems >= 2) {
+      Place PollingN = net.addPlace("Polling"+numSystems);
+      net.addPostcondition(net.getTransition("timeout"+numSystems), PollingN);
+      net.addPostcondition(net.getTransition("empty"+numSystems), PollingN);
+
+      Precondition pre = net.getPrecondition(net.getPlace("Polling"+(numSystems-1)), net.getTransition("startService1"));
+      if (pre != null) net.removePrecondition(pre);
+      net.addPrecondition(PollingN, net.getTransition("startService1"));
+      marking.setTokens(PollingN, 1);
+    }
+    
+    for(int i = 1; i < numSystems; i++) {
+      Place Polling = net.getPlace("Polling"+i);
+      if (Polling != null) {
+        marking.setTokens(Polling, 0);
+      }
+    }
+
   }
 }
