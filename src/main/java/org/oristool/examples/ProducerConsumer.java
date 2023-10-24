@@ -1,4 +1,4 @@
-package org.oristool.qesm;
+package org.oristool.examples;
 
 import java.math.BigDecimal;
 
@@ -12,7 +12,7 @@ import org.oristool.petrinet.PetriNet;
 import org.oristool.petrinet.Place;
 import org.oristool.petrinet.Transition;
 
-public class PollingSystem {
+public class ProducerConsumer {
     public static void main(String[] args) {
         PetriNet pn = new PetriNet();
 
