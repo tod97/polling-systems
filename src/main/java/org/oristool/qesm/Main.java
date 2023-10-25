@@ -1,4 +1,4 @@
-package org.oristool.examples;
+package org.oristool.qesm;
 
 import java.math.BigDecimal;
 
@@ -8,9 +8,8 @@ import org.oristool.models.stpn.trans.RegTransient;
 import org.oristool.models.stpn.trees.DeterministicEnablingState;
 import org.oristool.petrinet.Marking;
 import org.oristool.petrinet.PetriNet;
-import org.oristool.qesm.PollingSystem;
 
-public class ProducerConsumer {
+public class Main {
     public static void main(String[] args) {
         PetriNet pn = new PetriNet();
         Marking m = new Marking();
