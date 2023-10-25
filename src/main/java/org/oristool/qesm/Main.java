@@ -14,19 +14,16 @@ public class Main {
         PetriNet pn = new PetriNet();
         Marking m = new Marking();
         
-        PollingSystem.addClient(pn, m);
-        PollingSystem.addClient(pn, m);
-        PollingSystem.addClient(pn, m);
+        PollingSystem.addStationAutoLink(pn, m);
+        PollingSystem.addStationAutoLink(pn, m);
+        PollingSystem.addStationAutoLink(pn, m);
 
-        // transient until time=12, error 0.005 (per epoch), integration step=0.02
         RegTransient analysis = RegTransient.builder()
                 .greedyPolicy(new BigDecimal("1"), new BigDecimal("0.005"))
                 .timeStep(new BigDecimal("0.02")).build();
 
-        TransientSolution<DeterministicEnablingState, Marking> solution = 
-                analysis.compute(pn, m);
+        TransientSolution<DeterministicEnablingState, Marking> solution = analysis.compute(pn, m);
 
-        // display transient probabilities
         new TransientSolutionViewer(solution);
     }
 }

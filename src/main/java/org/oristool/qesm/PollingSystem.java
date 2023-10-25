@@ -12,9 +12,9 @@ import org.oristool.petrinet.Transition;
 
 public class PollingSystem {
 
-  public static int numSystems = 0;
+  public static int stationCounts = 0;
 
-  public static void addClient(
+  private static void addNewStation(
     PetriNet net,
     Marking marking,
     StochasticTransitionFeature arriveFeature,
@@ -22,18 +22,18 @@ public class PollingSystem {
     StochasticTransitionFeature serveFeature,
     StochasticTransitionFeature startServiceFeature,
     StochasticTransitionFeature timeoutFeature
-  ) {
-    numSystems++;
-    
-    Place AtService = net.addPlace("AtService"+numSystems);
-    Place Idle = net.addPlace("Idle"+numSystems);
-    Place Vacant = net.addPlace("Vacant"+numSystems);
-    Place Waiting = net.addPlace("Waiting"+numSystems);
-    Transition arrive = net.addTransition("arrive"+numSystems);
-    Transition empty = net.addTransition("empty"+numSystems);
-    Transition serve = net.addTransition("serve"+numSystems);
-    Transition startService = net.addTransition("startService"+numSystems);
-    Transition timeout = net.addTransition("timeout"+numSystems);
+  ) {    
+    stationCounts++;
+
+    Place AtService = net.addPlace("AtService"+stationCounts);
+    Place Idle = net.addPlace("Idle"+stationCounts);
+    Place Vacant = net.addPlace("Vacant"+stationCounts);
+    Place Waiting = net.addPlace("Waiting"+stationCounts);
+    Transition arrive = net.addTransition("arrive"+stationCounts);
+    Transition empty = net.addTransition("empty"+stationCounts);
+    Transition serve = net.addTransition("serve"+stationCounts);
+    Transition startService = net.addTransition("startService"+stationCounts);
+    Transition timeout = net.addTransition("timeout"+stationCounts);
 
     //Generating Connectors
     net.addInhibitorArc(Vacant, serve);
@@ -61,50 +61,9 @@ public class PollingSystem {
     startService.addFeature(startServiceFeature);
     timeout.addFeature(timeoutFeature);
     timeout.addFeature(new Priority(0));
-
-    if (numSystems == 2) {
-      Place Polling = net.addPlace("Polling"+(numSystems-1));
-      net.addPostcondition(net.getTransition("timeout"+(numSystems-1)), Polling);
-      net.addPostcondition(net.getTransition("empty"+(numSystems-1)), Polling);
-      net.addPrecondition(Polling, net.getTransition("startService"+(numSystems)));
-    }
-    if (numSystems >= 2) {
-      Place PollingN = net.addPlace("Polling"+numSystems);
-      net.addPostcondition(net.getTransition("timeout"+numSystems), PollingN);
-      net.addPostcondition(net.getTransition("empty"+numSystems), PollingN);
-
-      Precondition pre = net.getPrecondition(net.getPlace("Polling"+(numSystems-1)), net.getTransition("startService1"));
-      if (pre != null) net.removePrecondition(pre);
-      net.addPrecondition(PollingN, net.getTransition("startService1"));
-      marking.setTokens(PollingN, 1);
-    }
-    
-    for(int i = 1; i < numSystems; i++) {
-      Place Polling = net.getPlace("Polling"+i);
-      if (Polling != null) {
-        marking.setTokens(Polling, 0);
-      }
-    }
-
   }
 
-  public static void addClient(
-    PetriNet net,
-    Marking marking,
-    String arriveExpr,
-    String emptyExpr,
-    String timeoutExpr
-  ) {
-    StochasticTransitionFeature arriveFeature = StochasticTransitionFeature.newExponentialInstance(new BigDecimal("1"), MarkingExpr.from(arriveExpr, net));
-    StochasticTransitionFeature emptyFeature = StochasticTransitionFeature.newDeterministicInstance(new BigDecimal("0"), MarkingExpr.from(emptyExpr, net));
-    StochasticTransitionFeature serveFeature = StochasticTransitionFeature.newUniformInstance(new BigDecimal("0"), new BigDecimal("1"));
-    StochasticTransitionFeature startServiceFeature = StochasticTransitionFeature.newUniformInstance(new BigDecimal("1"), new BigDecimal("2"));
-    StochasticTransitionFeature timeoutFeature = StochasticTransitionFeature.newDeterministicInstance(new BigDecimal("3"), MarkingExpr.from(timeoutExpr, net));
-
-    addClient(net, marking, arriveFeature, emptyFeature, serveFeature, startServiceFeature, timeoutFeature);
-  }
-
-  public static void addClient(
+  public static void addStationAutoLink(
     PetriNet net,
     Marking marking
   ) {
@@ -114,7 +73,44 @@ public class PollingSystem {
     StochasticTransitionFeature startServiceFeature = StochasticTransitionFeature.newUniformInstance(new BigDecimal("1"), new BigDecimal("2"));
     StochasticTransitionFeature timeoutFeature = StochasticTransitionFeature.newDeterministicInstance(new BigDecimal("3"), MarkingExpr.from("1", net));
 
-    addClient(net, marking, arriveFeature, emptyFeature, serveFeature, startServiceFeature, timeoutFeature);
+    addStationAutoLink(net, marking, arriveFeature, emptyFeature, serveFeature, startServiceFeature, timeoutFeature);
+  }
+
+  public static void addStationAutoLink(
+    PetriNet net,
+    Marking marking,
+    StochasticTransitionFeature arriveFeature,
+    StochasticTransitionFeature emptyFeature,
+    StochasticTransitionFeature serveFeature,
+    StochasticTransitionFeature startServiceFeature,
+    StochasticTransitionFeature timeoutFeature
+  ) {
+    addNewStation(net, marking, arriveFeature, emptyFeature, serveFeature, startServiceFeature, timeoutFeature);
+
+    if (stationCounts == 2) {
+      Place Polling = net.addPlace("Polling"+(stationCounts-1));
+      net.addPostcondition(net.getTransition("timeout"+(stationCounts-1)), Polling);
+      net.addPostcondition(net.getTransition("empty"+(stationCounts-1)), Polling);
+      net.addPrecondition(Polling, net.getTransition("startService"+(stationCounts)));
+    }
+    if (stationCounts >= 2) {
+      Place PollingN = net.addPlace("Polling"+stationCounts);
+      net.addPostcondition(net.getTransition("timeout"+stationCounts), PollingN);
+      net.addPostcondition(net.getTransition("empty"+stationCounts), PollingN);
+
+      Precondition pre = net.getPrecondition(net.getPlace("Polling"+(stationCounts-1)), net.getTransition("startService1"));
+      if (pre != null) net.removePrecondition(pre);
+      net.addPrecondition(PollingN, net.getTransition("startService1"));
+      marking.setTokens(PollingN, 1);
+    }
+    
+    for(int i = 1; i < stationCounts; i++) {
+      Place Polling = net.getPlace("Polling"+i);
+      if (Polling != null) {
+        marking.setTokens(Polling, 0);
+      }
+    }
+
   }
 
   public static void buildExample(PetriNet net, Marking marking) {
