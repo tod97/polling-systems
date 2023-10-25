@@ -15,9 +15,9 @@ public class ProducerConsumer {
         PetriNet pn = new PetriNet();
         Marking m = new Marking();
         
-        PollingSystem.addSystem(pn, m);
-        PollingSystem.addSystem(pn, m);
-        PollingSystem.addSystem(pn, m);
+        PollingSystem.addClient(pn, m);
+        PollingSystem.addClient(pn, m);
+        PollingSystem.addClient(pn, m);
 
         // transient until time=12, error 0.005 (per epoch), integration step=0.02
         RegTransient analysis = RegTransient.builder()
