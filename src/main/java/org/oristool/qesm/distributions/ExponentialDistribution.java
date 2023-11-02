@@ -10,7 +10,7 @@ public class ExponentialDistribution implements IDistribution {
    BigDecimal expRate;
    MarkingExpr clockRate;
 
-   ExponentialDistribution(BigDecimal expRate, MarkingExpr clockRate) {
+   public ExponentialDistribution(BigDecimal expRate, MarkingExpr clockRate) {
       this.expRate = expRate;
       this.clockRate = clockRate;
    }

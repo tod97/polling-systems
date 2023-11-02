@@ -14,12 +14,10 @@ public class Main {
         PetriNet pn = new PetriNet();
         Marking m = new Marking();
         
-        PollingSystem.addStationAutoLink(pn, m);
-        PollingSystem.addStationAutoLink(pn, m);
-        PollingSystem.addStationAutoLink(pn, m);
+        PollingSystem.buildExhaustiveExample(pn, m);
 
         RegTransient analysis = RegTransient.builder()
-                .greedyPolicy(new BigDecimal("1"), new BigDecimal("0.005"))
+                .greedyPolicy(new BigDecimal("5"), new BigDecimal("0.005"))
                 .timeStep(new BigDecimal("0.02")).build();
 
         TransientSolution<DeterministicEnablingState, Marking> solution = analysis.compute(pn, m);

@@ -9,7 +9,7 @@ public class UniformDistribution implements IDistribution {
    BigDecimal eft;
    BigDecimal lft;
 
-   UniformDistribution(BigDecimal eft, BigDecimal lft) {
+   public UniformDistribution(BigDecimal eft, BigDecimal lft) {
       this.eft = eft;
       this.lft = lft;
    }

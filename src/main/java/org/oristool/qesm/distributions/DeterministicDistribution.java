@@ -10,7 +10,7 @@ public class DeterministicDistribution implements IDistribution {
    BigDecimal value;
    MarkingExpr weight;
 
-   DeterministicDistribution(BigDecimal value, MarkingExpr weight) {
+   public DeterministicDistribution(BigDecimal value, MarkingExpr weight) {
       this.value = value;
       this.weight = weight;
    }
