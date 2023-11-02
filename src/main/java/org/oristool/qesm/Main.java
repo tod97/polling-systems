@@ -26,4 +26,5 @@ public class Main {
 
         new TransientSolutionViewer(solution);
     }
+
 }
