@@ -25,7 +25,12 @@ public class Main {
                     double[] newTimes = station.exec();
                     station.setTimes(newTimes);
                 } else {
-                    double[] otherTimes = getStationsTimesButIndex(stations, i);
+                    List<double[]> otherTimes = new ArrayList<double[]>();
+                    for (int k = 0; k < stations.size(); k++) {
+                        if (k != i) {
+                            otherTimes.add(stations.get(k).getTimes());
+                        }
+                    }
                     station.updateWaitingTime(otherTimes);
                     
                     double[] newTimes = station.exec();
@@ -36,24 +41,8 @@ public class Main {
                     }
                 }
             }
+            
+            System.out.println("nStationCompleted: " + nStationCompleted);
         }
-    }
-
-    private static double[] getStationsTimesButIndex(List<Station> stations, int index) {
-        if (stations.size() == 0) {
-            return null;
-        }
-
-        double[] times = new double[stations.get(0).getTimes().length];
-
-        for(int i = 0; i < stations.size(); i++) {
-            if (i != index) {
-                for(int j = 0; j < times.length; j++) {
-                    times[j] += stations.get(i).getTimes()[j];
-                }
-            }
-        }
-
-        return times;
     }
 }

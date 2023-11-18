@@ -26,8 +26,7 @@ public class LimitedStation extends Station {
       super();
    }
 
-   @Override
-   public void updateWaitingTime(double[] times) {
+   public void updateWaitingTime(List<double[]> times) {
    }
 
    protected void build(PetriNet net, Marking marking) {

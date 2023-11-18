@@ -1,6 +1,7 @@
 package org.oristool.qesm.stations;
 
 import java.math.BigDecimal;
+import java.util.List;
 
 import org.oristool.models.stpn.TransientSolution;
 import org.oristool.models.stpn.TransientSolutionViewer;
@@ -21,7 +22,7 @@ public abstract class Station {
         build(pn, m);
     }
 
-    public abstract void updateWaitingTime(double[] times);
+    public abstract void updateWaitingTime(List<double[]> times);
     protected abstract void build(PetriNet net, Marking marking);
     
     public double[] exec() {

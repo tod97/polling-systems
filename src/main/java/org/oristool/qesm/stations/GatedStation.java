@@ -25,8 +25,7 @@ public class GatedStation extends Station {
       super();
    }
 
-   @Override
-   public void updateWaitingTime(double[] times) {
+   public void updateWaitingTime(List<double[]> times) {
 
    }
 
