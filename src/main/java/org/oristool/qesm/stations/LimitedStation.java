@@ -29,60 +29,62 @@ public class LimitedStation extends Station {
    public void updateWaitingTime(List<double[]> times) {
    }
 
-   protected void build(PetriNet net, Marking marking) {
+   protected void build() {
+      net = new PetriNet();
+      marking = new Marking();
 
-    //Generating Nodes
-    Place p0 = net.addPlace("p0");
-    Place p1 = net.addPlace("p1");
-    Place p13 = net.addPlace("p13");
-    Place p15 = net.addPlace("p15");
-    Place p16 = net.addPlace("p16");
-    Place p17 = net.addPlace("p17");
-    Transition t0 = net.addTransition("t0");
-    Transition t2 = net.addTransition("t2");
-    Transition t3 = net.addTransition("t3");
-    Transition t4 = net.addTransition("t4");
+      //Generating Nodes
+      Place p0 = net.addPlace("p0");
+      Place p1 = net.addPlace("p1");
+      Place p13 = net.addPlace("p13");
+      Place p15 = net.addPlace("p15");
+      Place p16 = net.addPlace("p16");
+      Place p17 = net.addPlace("p17");
+      Transition t0 = net.addTransition("t0");
+      Transition t2 = net.addTransition("t2");
+      Transition t3 = net.addTransition("t3");
+      Transition t4 = net.addTransition("t4");
 
-    //Generating Connectors
-    net.addInhibitorArc(p13, t3);
-    net.addInhibitorArc(p0, t3);
-    net.addPostcondition(t3, p17);
-    net.addPostcondition(t4, p15);
-    net.addPostcondition(t0, p1);
-    net.addPrecondition(p16, t4);
-    net.addPostcondition(t2, p13);
-    net.addPrecondition(p15, t3);
-    net.addPostcondition(t3, p16);
-    net.addPrecondition(p1, t2);
-    net.addPrecondition(p0, t0);
+      //Generating Connectors
+      net.addInhibitorArc(p13, t3);
+      net.addInhibitorArc(p0, t3);
+      net.addPostcondition(t3, p17);
+      net.addPostcondition(t4, p15);
+      net.addPostcondition(t0, p1);
+      net.addPrecondition(p16, t4);
+      net.addPostcondition(t2, p13);
+      net.addPrecondition(p15, t3);
+      net.addPostcondition(t3, p16);
+      net.addPrecondition(p1, t2);
+      net.addPrecondition(p0, t0);
 
-    //Generating Properties
-    marking.setTokens(p0, 1);
-    marking.setTokens(p1, 0);
-    marking.setTokens(p13, 0);
-    marking.setTokens(p15, 0);
-    marking.setTokens(p16, 5);
-    marking.setTokens(p17, 0);
-    List<GEN> t0_gens = new ArrayList<>();
+      //Generating Properties
+      marking.setTokens(p0, 1);
+      marking.setTokens(p1, 0);
+      marking.setTokens(p13, 0);
+      marking.setTokens(p15, 0);
+      marking.setTokens(p16, 5);
+      marking.setTokens(p17, 0);
+      List<GEN> t0_gens = new ArrayList<>();
 
-    DBMZone t0_d_0 = new DBMZone(new Variable("x"));
-    Expolynomial t0_e_0 = Expolynomial.fromString("3 * Exp[-4 x] + x^1 * Exp[-2 x]");
-    //Normalization
-    t0_e_0.multiply(new BigDecimal(8010.219010916156));
-    t0_d_0.setCoefficient(new Variable("x"), new Variable("t*"), new OmegaBigDecimal("10"));
-    t0_d_0.setCoefficient(new Variable("t*"), new Variable("x"), new OmegaBigDecimal("-5"));
-    GEN t0_gen_0 = new GEN(t0_d_0, t0_e_0);
-    t0_gens.add(t0_gen_0);
+      DBMZone t0_d_0 = new DBMZone(new Variable("x"));
+      Expolynomial t0_e_0 = Expolynomial.fromString("3 * Exp[-4 x] + x^1 * Exp[-2 x]");
+      //Normalization
+      t0_e_0.multiply(new BigDecimal(8010.219010916156));
+      t0_d_0.setCoefficient(new Variable("x"), new Variable("t*"), new OmegaBigDecimal("10"));
+      t0_d_0.setCoefficient(new Variable("t*"), new Variable("x"), new OmegaBigDecimal("-5"));
+      GEN t0_gen_0 = new GEN(t0_d_0, t0_e_0);
+      t0_gens.add(t0_gen_0);
 
-    PartitionedGEN t0_pFunction = new PartitionedGEN(t0_gens);
-    StochasticTransitionFeature t0_feature = StochasticTransitionFeature.of(t0_pFunction);
-    t0.addFeature(t0_feature);
+      PartitionedGEN t0_pFunction = new PartitionedGEN(t0_gens);
+      StochasticTransitionFeature t0_feature = StochasticTransitionFeature.of(t0_pFunction);
+      t0.addFeature(t0_feature);
 
-    t2.addFeature(new EnablingFunction("p17==10"));
-    t2.addFeature(new PostUpdater("p17=0", net));
-    t2.addFeature(StochasticTransitionFeature.newDeterministicInstance(new BigDecimal("0"), MarkingExpr.from("1", net)));
-    t2.addFeature(new Priority(0));
-    t3.addFeature(StochasticTransitionFeature.newUniformInstance(new BigDecimal("0"), new BigDecimal("1")));
-    t4.addFeature(StochasticTransitionFeature.newExponentialInstance(new BigDecimal("1"), MarkingExpr.from("1", net)));
+      t2.addFeature(new EnablingFunction("p17==10"));
+      t2.addFeature(new PostUpdater("p17=0", net));
+      t2.addFeature(StochasticTransitionFeature.newDeterministicInstance(new BigDecimal("0"), MarkingExpr.from("1", net)));
+      t2.addFeature(new Priority(0));
+      t3.addFeature(StochasticTransitionFeature.newUniformInstance(new BigDecimal("0"), new BigDecimal("1")));
+      t4.addFeature(StochasticTransitionFeature.newExponentialInstance(new BigDecimal("1"), MarkingExpr.from("1", net)));
   }
 }
