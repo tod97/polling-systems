@@ -25,7 +25,7 @@ public abstract class Station {
     public double[] exec() {
         RegTransient analysis = RegTransient.builder()
                 .greedyPolicy(new BigDecimal("5"), new BigDecimal("0.005"))
-                .timeStep(new BigDecimal("0.02")).build();
+                .timeStep(new BigDecimal("0.1")).build();
 
         TransientSolution<DeterministicEnablingState, Marking> solution = analysis.compute(net, marking);
         
