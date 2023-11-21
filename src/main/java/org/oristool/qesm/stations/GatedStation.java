@@ -45,6 +45,7 @@ public class GatedStation extends Station {
          }
 
          Transition immTransition = net.addTransition("imm_t");
+         immTransition.addFeature(new PostUpdater("p17=p15", net));
          immTransition.addFeature(StochasticTransitionFeature.newDeterministicInstance(new BigDecimal("0"), MarkingExpr.from("1", net)));
          net.addPrecondition(net.getPlace("det_p"+(times.size()-1)), immTransition);
          net.addPostcondition(immTransition, net.getPlace("p1"));
