@@ -52,6 +52,11 @@ public abstract class Station {
         return true;
     }
 
+    public BigDecimal approxTimes(double[] times) {
+        // TODO 
+        return new BigDecimal(0);
+    }
+
     public void showAnalysisGraph() {
         RegTransient analysis = RegTransient.builder()
                 .greedyPolicy(new BigDecimal("5"), new BigDecimal("0.005"))
