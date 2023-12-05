@@ -32,8 +32,7 @@ public class GatedStation extends Station {
 
          for (int i = 0; i < times.size(); i++) {
             Transition transition = net.addTransition("det_t"+i);
-            BigDecimal approx = approxTimes(times.get(i));
-            transition.addFeature(StochasticTransitionFeature.newDeterministicInstance(approx, MarkingExpr.from("1", net)));
+            transition.addFeature(approxTimes(times.get(i)));
             Place place = net.addPlace("det_p"+i);
 
             if (i == 0) {

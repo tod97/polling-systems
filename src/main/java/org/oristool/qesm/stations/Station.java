@@ -7,10 +7,15 @@ import org.oristool.models.stpn.TransientSolution;
 import org.oristool.models.stpn.TransientSolutionViewer;
 import org.oristool.models.stpn.trans.RegTransient;
 import org.oristool.models.stpn.trees.DeterministicEnablingState;
+import org.oristool.models.stpn.trees.StochasticTransitionFeature;
 import org.oristool.petrinet.Marking;
 import org.oristool.petrinet.PetriNet;
+import org.oristool.qesm.approximations.TruncatedExponentialApproximation;
 
 public abstract class Station {
+    protected final BigDecimal upTime = new BigDecimal("5");
+    protected final BigDecimal timeStep = this.upTime.divide(new BigDecimal("100"));
+
     protected PetriNet net;
     protected Marking marking;
     protected double[] times;
@@ -24,8 +29,8 @@ public abstract class Station {
     
     public double[] exec() {
         RegTransient analysis = RegTransient.builder()
-                .greedyPolicy(new BigDecimal("5"), new BigDecimal("0.005"))
-                .timeStep(new BigDecimal("0.1")).build();
+                .greedyPolicy(this.upTime, this.upTime.divide(new BigDecimal("1000")))
+                .timeStep(this.timeStep).build();
 
         TransientSolution<DeterministicEnablingState, Marking> solution = analysis.compute(net, marking);
         
@@ -52,15 +57,17 @@ public abstract class Station {
         return true;
     }
 
-    public BigDecimal approxTimes(double[] times) {
-        // TODO 
-        return new BigDecimal(0);
+    public StochasticTransitionFeature approxTimes(double[] times) {
+        TruncatedExponentialApproximation approx = new TruncatedExponentialApproximation();
+        return approx.getApproximatedStochasticTransitionFeature(times, 0, this.upTime.doubleValue(), this.timeStep);
+
+        // return StochasticTransitionFeature.newDeterministicInstance(new BigDecimal(0), MarkingExpr.from("1", net));
     }
 
     public void showAnalysisGraph() {
         RegTransient analysis = RegTransient.builder()
-                .greedyPolicy(new BigDecimal("5"), new BigDecimal("0.005"))
-                .timeStep(new BigDecimal("0.02")).build();
+                .greedyPolicy(this.upTime, this.upTime.divide(new BigDecimal("1000")))
+                .timeStep(this.timeStep).build();
 
         TransientSolution<DeterministicEnablingState, Marking> solution = analysis.compute(net, marking);
 
