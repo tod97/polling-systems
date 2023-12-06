@@ -22,7 +22,7 @@ public class Main {
                 Station station = stations.get(i);
 
                 if (station.getTimes() == null) {
-                    double[] newTimes = station.exec();
+                    double[] newTimes = station.execAndSort();
                     station.setTimes(newTimes);
                 } else {
                     List<double[]> otherTimes = new ArrayList<double[]>();
@@ -33,7 +33,7 @@ public class Main {
                     }
                     station.updateWaitingTime(otherTimes);
                     
-                    double[] newTimes = station.exec();
+                    double[] newTimes = station.execAndSort();
                     if(station.isTimesDiffInThreshold(newTimes, 0.01)) {
                         nStationCompleted++;
                     } else {

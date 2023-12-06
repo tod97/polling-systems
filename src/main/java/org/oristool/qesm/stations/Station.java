@@ -1,6 +1,7 @@
 package org.oristool.qesm.stations;
 
 import java.math.BigDecimal;
+import java.util.Arrays;
 import java.util.List;
 
 import org.oristool.models.stpn.TransientSolution;
@@ -40,6 +41,12 @@ public abstract class Station {
             CDF[i] = solution.getSolution()[i][0][0];
         }
 
+        return CDF;
+    }
+
+    public double[] execAndSort() {
+        double[] CDF = exec();
+        Arrays.sort(CDF);
         return CDF;
     }
 
