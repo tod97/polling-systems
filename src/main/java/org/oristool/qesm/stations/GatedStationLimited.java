@@ -19,9 +19,9 @@ import org.oristool.petrinet.PetriNet;
 import org.oristool.petrinet.Place;
 import org.oristool.petrinet.Transition;
 
-public class GatedStation extends Station {
+public class GatedStationLimited extends Station {
 
-   public GatedStation() {
+   public GatedStationLimited() {
       super();
    }
 
@@ -68,17 +68,18 @@ public class GatedStation extends Station {
       Transition t4 = net.addTransition("t4");
 
       //Generating Connectors
-      net.addInhibitorArc(p17, t2);
-      net.addInhibitorArc(p0, t3);
       net.addInhibitorArc(p13, t3);
-      net.addPrecondition(p17, t3);
-      net.addPostcondition(t3, p16);
-      net.addPrecondition(p1, t2);
+      net.addInhibitorArc(p0, t3);
+      net.addPostcondition(t2, p13);
       net.addPostcondition(t0, p1);
       net.addPrecondition(p0, t0);
+      net.addPrecondition(p15, t3);
       net.addPrecondition(p16, t4);
-      net.addPostcondition(t2, p13);
       net.addPostcondition(t4, p15);
+      net.addPrecondition(p1, t2);
+      net.addPostcondition(t3, p16);
+      net.addInhibitorArc(p17, t2);
+      net.addPrecondition(p17, t3);
 
       //Generating Properties
       marking.setTokens(p0, 1);
@@ -87,7 +88,7 @@ public class GatedStation extends Station {
       marking.setTokens(p15, 0);
       marking.setTokens(p16, 5);
       marking.setTokens(p17, 0);
-      t0.addFeature(new PostUpdater("p17=p15;p15=0", net));
+      t0.addFeature(new PostUpdater("p17=p15", net));
       List<GEN> t0_gens = new ArrayList<>();
 
       DBMZone t0_d_0 = new DBMZone(new Variable("x"));
