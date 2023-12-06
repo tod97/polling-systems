@@ -11,12 +11,12 @@ public class Main {
     public static void main(String[] args) {
         List<Station> stations = new ArrayList<Station>();
         stations.add(new GatedStation());
-        stations.add(new LimitedStation());
+        stations.add(new GatedStation());
+        stations.add(new GatedStation());
 
         int nStationCompleted = 0;
         
-        //while (nStationCompleted < stations.size()) {
-        for(int j = 0; j < 10; j++) {
+        for(int j = 0; j < 100; j++) {
             nStationCompleted = 0;
             for (int i = 0; i < stations.size(); i++) {
                 Station station = stations.get(i);
@@ -34,7 +34,7 @@ public class Main {
                     station.updateWaitingTime(otherTimes);
                     
                     double[] newTimes = station.execAndSort();
-                    if(station.isTimesDiffInThreshold(newTimes, 0.01)) {
+                    if(station.isTimesDiffInThreshold(newTimes, 10E-9)) {
                         nStationCompleted++;
                     } else {
                         station.setTimes(newTimes);
@@ -43,6 +43,9 @@ public class Main {
             }
             
             System.out.println("nStationCompleted: " + nStationCompleted);
+            if (nStationCompleted == stations.size()) {
+                break;
+            }
         }
     }
 }
