@@ -4,8 +4,8 @@ import org.apache.commons.math3.analysis.differentiation.DerivativeStructure;
 import org.apache.commons.math3.analysis.differentiation.UnivariateDifferentiableFunction;
 import org.apache.commons.math3.analysis.solvers.NewtonRaphsonSolver;
 import org.apache.commons.math3.exception.DimensionMismatchException;
-import org.oristool.math.OmegaBigDecimal;
 import org.oristool.models.stpn.trees.StochasticTransitionFeature;
+import org.oristool.qesm.distributions.ExpolynomialDistribution;
 
 import java.math.BigDecimal;
 import java.math.RoundingMode;
@@ -13,6 +13,13 @@ import java.util.Arrays;
 import java.util.stream.IntStream;
 
 public class TruncatedExponentialApproximation extends Approximation {
+
+   ExpolynomialDistribution distribution;
+
+   @Override
+   public ExpolynomialDistribution getDistribution() {
+      return distribution;
+   }
 
    @Override
    public StochasticTransitionFeature getApproximatedStochasticTransitionFeature(double[] cdf, double low, double upp,
@@ -105,11 +112,8 @@ public class TruncatedExponentialApproximation extends Approximation {
 
       bodyLambda = BigDecimal.valueOf(bodyLambda).setScale(3, RoundingMode.HALF_UP).doubleValue();
 
-      feature = StochasticTransitionFeature.newExpolynomial(
-            bodyLambda * Math.exp(bodyLambda * delta) / (1 - Math.exp(-bodyLambda * (upp - delta))) + " * Exp["
-                  + (-bodyLambda) + " x]",
-            new OmegaBigDecimal(String.valueOf(delta)),
-            new OmegaBigDecimal(String.valueOf(upp)));
+      this.distribution = new ExpolynomialDistribution(bodyLambda, delta, upp);
+      feature = this.distribution.getStochasticTransitionFeature();
 
       return feature;
    }

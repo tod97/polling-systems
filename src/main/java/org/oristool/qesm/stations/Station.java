@@ -20,6 +20,10 @@ public abstract class Station {
    protected Marking marking;
    protected double[] times;
 
+   public abstract void updatePNWithApproxTimes(List<double[]> times);
+
+   protected abstract void buildStation();
+
    public double[] getTimes() {
       return times;
    }
@@ -31,10 +35,6 @@ public abstract class Station {
    public Station() {
       buildStation();
    }
-
-   public abstract void updatePNWithApproxTimes(List<double[]> times);
-
-   protected abstract void buildStation();
 
    public double[] exec() {
       // String cond = "pEnd > 0";
