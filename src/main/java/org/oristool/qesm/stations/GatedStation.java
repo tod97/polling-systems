@@ -29,14 +29,14 @@ public class GatedStation extends Station {
       if (times.size() > 0) {
          build();
 
-         TempStation temp = new TempStation();
-         temp.updateWaitingTime(times);
-         double[] tempCDF = temp.exec();
-         StochasticTransitionFeature tempFeature = approxTimes(tempCDF);
+         ApproximationStation approxStation = new ApproximationStation();
+         approxStation.updateWaitingTime(times);
+         double[] approxCDF = approxStation.exec();
+         StochasticTransitionFeature approxFeature = approxTimes(approxCDF);
 
          net.removeTransition(net.getTransition("t0"));
          Transition t0 = net.addTransition("t0");
-         t0.addFeature(tempFeature);
+         t0.addFeature(approxFeature);
 
          net.addPostcondition(t0, net.getPlace("p1"));
          net.addPrecondition(net.getPlace("p0"), t0);

@@ -23,6 +23,14 @@ public abstract class Station {
     protected Marking marking;
     protected double[] times;
 
+    public double[] getTimes() {
+        return times;
+    }
+
+    public void setTimes(double[] times) {
+        this.times = times;
+    }
+
     public Station() {
         build();
     }
@@ -70,25 +78,5 @@ public abstract class Station {
     public StochasticTransitionFeature approxTimes(double[] times) {
         TruncatedExponentialApproximation approx = new TruncatedExponentialApproximation();
         return approx.getApproximatedStochasticTransitionFeature(times, 0, this.upTime.doubleValue(), this.timeStep);
-
-        // return StochasticTransitionFeature.newDeterministicInstance(new BigDecimal(0), MarkingExpr.from("1", net));
-    }
-
-    public void showAnalysisGraph() {
-        RegTransient analysis = RegTransient.builder()
-                .greedyPolicy(this.upTime, this.upTime.divide(new BigDecimal("1000")))
-                .timeStep(this.timeStep).build();
-
-        TransientSolution<DeterministicEnablingState, Marking> solution = analysis.compute(net, marking);
-
-        new TransientSolutionViewer(solution);
-    }
-
-    public double[] getTimes() {
-        return times;
-    }
-
-    public void setTimes(double[] times) {
-        this.times = times;
     }
 }

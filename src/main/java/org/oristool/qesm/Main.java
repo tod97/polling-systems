@@ -12,6 +12,7 @@ public class Main {
         List<Station> stations = new ArrayList<Station>();
         stations.add(new GatedStation());
         stations.add(new GatedStation());
+        stations.add(new GatedStation());
 
         int nStationCompleted = 0;
         

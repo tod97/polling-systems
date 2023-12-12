@@ -10,9 +10,9 @@ import org.oristool.petrinet.PetriNet;
 import org.oristool.petrinet.Place;
 import org.oristool.petrinet.Transition;
 
-public class TempStation extends Station {
+public class ApproximationStation extends Station {
 
-   public TempStation() {
+   public ApproximationStation() {
       super();
    }
 
