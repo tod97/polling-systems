@@ -58,7 +58,7 @@ public class GatedStation extends Station {
       //Generating Nodes
       Place p0 = net.addPlace("p0");
       Place p1 = net.addPlace("p1");
-      Place p13 = net.addPlace("p13");
+      Place pEnd = net.addPlace("pEnd");
       Place p15 = net.addPlace("p15");
       Place p16 = net.addPlace("p16");
       Place p17 = net.addPlace("p17");
@@ -70,20 +70,20 @@ public class GatedStation extends Station {
       //Generating Connectors
       net.addInhibitorArc(p17, t2);
       net.addInhibitorArc(p0, t3);
-      net.addInhibitorArc(p13, t3);
+      net.addInhibitorArc(pEnd, t3);
       net.addPrecondition(p17, t3);
       net.addPostcondition(t3, p16);
       net.addPrecondition(p1, t2);
       net.addPostcondition(t0, p1);
       net.addPrecondition(p0, t0);
       net.addPrecondition(p16, t4);
-      net.addPostcondition(t2, p13);
+      net.addPostcondition(t2, pEnd);
       net.addPostcondition(t4, p15);
 
       //Generating Properties
       marking.setTokens(p0, 1);
       marking.setTokens(p1, 0);
-      marking.setTokens(p13, 0);
+      marking.setTokens(pEnd, 0);
       marking.setTokens(p15, 0);
       marking.setTokens(p16, 5);
       marking.setTokens(p17, 0);
