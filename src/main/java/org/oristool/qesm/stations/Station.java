@@ -13,67 +13,70 @@ import org.oristool.petrinet.PetriNet;
 import org.oristool.qesm.approximations.TruncatedExponentialApproximation;
 
 public abstract class Station {
-    protected final BigDecimal upTime = new BigDecimal("5");
-    protected final BigDecimal timeStep = this.upTime.divide(new BigDecimal("100"));
+   protected final BigDecimal upTime = new BigDecimal("5");
+   protected final BigDecimal timeStep = this.upTime.divide(new BigDecimal("100"));
 
-    protected PetriNet net;
-    protected Marking marking;
-    protected double[] times;
+   protected PetriNet net;
+   protected Marking marking;
+   protected double[] times;
 
-    public double[] getTimes() {
-        return times;
-    }
+   public double[] getTimes() {
+      return times;
+   }
 
-    public void setTimes(double[] times) {
-        this.times = times;
-    }
+   public void setTimes(double[] times) {
+      this.times = times;
+   }
 
-    public Station() {
-        buildStation();
-    }
+   public Station() {
+      buildStation();
+   }
 
-    public abstract void updatePNWithApproxTimes(List<double[]> times);
-    protected abstract void buildStation();
-    
-    public double[] exec() {
-        //String cond = "pEnd > 0";
+   public abstract void updatePNWithApproxTimes(List<double[]> times);
 
-        RegTransient analysis = RegTransient.builder()
-                .greedyPolicy(this.upTime, this.upTime.divide(new BigDecimal("1000")))
-                .timeStep(this.timeStep)
-                //.markingFilter(MarkingCondition.fromString(cond))
-                .build();
+   protected abstract void buildStation();
 
-        TransientSolution<DeterministicEnablingState, Marking> solution = analysis.compute(net, marking);
-        //TransientSolution<DeterministicEnablingState, RewardRate> rewardSolution = TransientSolution.computeRewards(false, solution, RewardRate.fromString(cond));
+   public double[] exec() {
+      // String cond = "pEnd > 0";
 
-        double[] CDF = new double[solution.getSolution().length];
+      RegTransient analysis = RegTransient.builder()
+            .greedyPolicy(this.upTime, this.upTime.divide(new BigDecimal("1000")))
+            .timeStep(this.timeStep)
+            // .markingFilter(MarkingCondition.fromString(cond))
+            .build();
 
-        for(int i = 0; i < CDF.length; i++) {
-            CDF[i] = solution.getSolution()[i][0][0];
-        }
+      TransientSolution<DeterministicEnablingState, Marking> solution = analysis.compute(net, marking);
+      // TransientSolution<DeterministicEnablingState, RewardRate> rewardSolution =
+      // TransientSolution.computeRewards(false, solution,
+      // RewardRate.fromString(cond));
 
-        // TODO remove sort
-        Arrays.sort(CDF);
-        return CDF;
-    }
+      double[] CDF = new double[solution.getSolution().length];
 
-    public boolean isTimesDiffInThreshold(double[] newTimes, double threshold) {
-        if (times.length != newTimes.length) {
+      for (int i = 0; i < CDF.length; i++) {
+         CDF[i] = solution.getSolution()[i][0][0];
+      }
+
+      // TODO remove sort
+      Arrays.sort(CDF);
+      return CDF;
+   }
+
+   public boolean isTimesDiffInThreshold(double[] newTimes, double threshold) {
+      if (times.length != newTimes.length) {
+         return false;
+      }
+
+      for (int i = 0; i < times.length; i++) {
+         if (Math.abs(times[i] - newTimes[i]) > threshold) {
             return false;
-        }
+         }
+      }
 
-        for(int i = 0; i < times.length; i++) {
-            if (Math.abs(times[i] - newTimes[i]) > threshold) {
-                return false;
-            }
-        }
+      return true;
+   }
 
-        return true;
-    }
-
-    public StochasticTransitionFeature approxTimes(double[] times) {
-        TruncatedExponentialApproximation approx = new TruncatedExponentialApproximation();
-        return approx.getApproximatedStochasticTransitionFeature(times, 0, this.upTime.doubleValue(), this.timeStep);
-    }
+   public StochasticTransitionFeature approxTimes(double[] times) {
+      TruncatedExponentialApproximation approx = new TruncatedExponentialApproximation();
+      return approx.getApproximatedStochasticTransitionFeature(times, 0, this.upTime.doubleValue(), this.timeStep);
+   }
 }

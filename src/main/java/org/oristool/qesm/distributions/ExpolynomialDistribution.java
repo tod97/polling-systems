@@ -18,8 +18,9 @@ public class ExpolynomialDistribution extends Distribution {
    @Override
    public StochasticTransitionFeature getStochasticTransitionFeature() {
       return StochasticTransitionFeature.newExpolynomial(
-                bodyLambda * Math.exp(bodyLambda * delta) / (1 - Math.exp(-bodyLambda * (upp - delta))) + " * Exp[" + (-bodyLambda) + " x]",
-                new OmegaBigDecimal(String.valueOf(delta)),
-                new OmegaBigDecimal(String.valueOf(upp)));
+            bodyLambda * Math.exp(bodyLambda * delta) / (1 - Math.exp(-bodyLambda * (upp - delta))) + " * Exp["
+                  + (-bodyLambda) + " x]",
+            new OmegaBigDecimal(String.valueOf(delta)),
+            new OmegaBigDecimal(String.valueOf(upp)));
    }
 }

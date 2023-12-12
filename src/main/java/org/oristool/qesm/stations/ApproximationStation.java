@@ -21,21 +21,22 @@ public class ApproximationStation extends Station {
          buildStation();
 
          for (int i = 0; i < times.size(); i++) {
-            Transition transition = net.addTransition("det_t"+i);
+            Transition transition = net.addTransition("det_t" + i);
             transition.addFeature(approxTimes(times.get(i)));
-            Place place = net.addPlace("det_p"+i);
+            Place place = net.addPlace("det_p" + i);
 
             if (i == 0) {
                net.addPrecondition(net.getPlace("p0"), transition);
             } else {
-               net.addPrecondition(net.getPlace("det_p"+(i-1)), transition);
+               net.addPrecondition(net.getPlace("det_p" + (i - 1)), transition);
             }
             net.addPostcondition(transition, place);
          }
 
          Transition immTransition = net.addTransition("imm_t");
-         immTransition.addFeature(StochasticTransitionFeature.newDeterministicInstance(new BigDecimal("0"), MarkingExpr.from("1", net)));
-         net.addPrecondition(net.getPlace("det_p"+(times.size()-1)), immTransition);
+         immTransition.addFeature(
+               StochasticTransitionFeature.newDeterministicInstance(new BigDecimal("0"), MarkingExpr.from("1", net)));
+         net.addPrecondition(net.getPlace("det_p" + (times.size() - 1)), immTransition);
          net.addPostcondition(immTransition, net.getPlace("pEnd"));
       }
    }

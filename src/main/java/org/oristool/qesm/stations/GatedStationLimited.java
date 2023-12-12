@@ -48,7 +48,7 @@ public class GatedStationLimited extends Station {
       net = new PetriNet();
       marking = new Marking();
 
-      //Generating Nodes
+      // Generating Nodes
       Place p0 = net.addPlace("p0");
       Place p1 = net.addPlace("p1");
       Place pEnd = net.addPlace("pEnd");
@@ -60,7 +60,7 @@ public class GatedStationLimited extends Station {
       Transition t3 = net.addTransition("t3");
       Transition t4 = net.addTransition("t4");
 
-      //Generating Connectors
+      // Generating Connectors
       net.addInhibitorArc(pEnd, t3);
       net.addInhibitorArc(p0, t3);
       net.addPostcondition(t2, pEnd);
@@ -74,7 +74,7 @@ public class GatedStationLimited extends Station {
       net.addInhibitorArc(p17, t2);
       net.addPrecondition(p17, t3);
 
-      //Generating Properties
+      // Generating Properties
       marking.setTokens(p0, 1);
       marking.setTokens(p1, 0);
       marking.setTokens(pEnd, 0);
@@ -86,7 +86,7 @@ public class GatedStationLimited extends Station {
 
       DBMZone t0_d_0 = new DBMZone(new Variable("x"));
       Expolynomial t0_e_0 = Expolynomial.fromString("3 * Exp[-4 x] + x^1 * Exp[-2 x]");
-      //Normalization
+      // Normalization
       t0_e_0.multiply(new BigDecimal(8010.219010916156));
       t0_d_0.setCoefficient(new Variable("x"), new Variable("t*"), new OmegaBigDecimal("10"));
       t0_d_0.setCoefficient(new Variable("t*"), new Variable("x"), new OmegaBigDecimal("-5"));
@@ -97,9 +97,11 @@ public class GatedStationLimited extends Station {
       StochasticTransitionFeature t0_feature = StochasticTransitionFeature.of(t0_pFunction);
       t0.addFeature(t0_feature);
 
-      t2.addFeature(StochasticTransitionFeature.newDeterministicInstance(new BigDecimal("0"), MarkingExpr.from("1", net)));
+      t2.addFeature(
+            StochasticTransitionFeature.newDeterministicInstance(new BigDecimal("0"), MarkingExpr.from("1", net)));
       t2.addFeature(new Priority(0));
       t3.addFeature(StochasticTransitionFeature.newUniformInstance(new BigDecimal("0"), new BigDecimal("1")));
-      t4.addFeature(StochasticTransitionFeature.newExponentialInstance(new BigDecimal("1"), MarkingExpr.from("1", net)));
+      t4.addFeature(
+            StochasticTransitionFeature.newExponentialInstance(new BigDecimal("1"), MarkingExpr.from("1", net)));
    }
 }
