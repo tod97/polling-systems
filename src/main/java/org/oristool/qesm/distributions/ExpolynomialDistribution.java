@@ -5,9 +5,9 @@ import org.oristool.models.stpn.trees.StochasticTransitionFeature;
 
 public class ExpolynomialDistribution extends Distribution {
 
-   double bodyLambda;
-   double delta;
-   double upp;
+   protected double bodyLambda;
+   protected double delta;
+   protected double upp;
 
    public ExpolynomialDistribution(double bodyLambda, double delta, double upp) {
       this.bodyLambda = bodyLambda;
@@ -22,5 +22,29 @@ public class ExpolynomialDistribution extends Distribution {
                   + (-bodyLambda) + " x]",
             new OmegaBigDecimal(String.valueOf(delta)),
             new OmegaBigDecimal(String.valueOf(upp)));
+   }
+
+   public double getBodyLambda() {
+      return bodyLambda;
+   }
+
+   public void setBodyLambda(double bodyLambda) {
+      this.bodyLambda = bodyLambda;
+   }
+
+   public double getDelta() {
+      return delta;
+   }
+
+   public void setDelta(double delta) {
+      this.delta = delta;
+   }
+
+   public double getUpp() {
+      return upp;
+   }
+
+   public void setUpp(double upp) {
+      this.upp = upp;
    }
 }

@@ -19,21 +19,15 @@ public abstract class Station {
    protected PetriNet net;
    protected Marking marking;
    protected double[] times;
+   public TruncatedExponentialApproximation approximation;
 
    public abstract void updatePNWithApproxTimes(List<double[]> times);
 
    protected abstract void buildStation();
 
-   public double[] getTimes() {
-      return times;
-   }
-
-   public void setTimes(double[] times) {
-      this.times = times;
-   }
-
    public Station() {
       buildStation();
+      this.approximation = new TruncatedExponentialApproximation();
    }
 
    public double[] exec() {
@@ -76,7 +70,15 @@ public abstract class Station {
    }
 
    public StochasticTransitionFeature approxTimes(double[] times) {
-      TruncatedExponentialApproximation approx = new TruncatedExponentialApproximation();
-      return approx.getApproximatedStochasticTransitionFeature(times, 0, this.upTime.doubleValue(), this.timeStep);
+      return this.approximation.getApproximatedStochasticTransitionFeature(times, 0, this.upTime.doubleValue(),
+            this.timeStep);
+   }
+
+   public double[] getTimes() {
+      return times;
+   }
+
+   public void setTimes(double[] times) {
+      this.times = times;
    }
 }
