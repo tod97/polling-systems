@@ -3,6 +3,7 @@ package org.oristool.qesm;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.oristool.qesm.distributions.ExpolynomialDistribution;
 import org.oristool.qesm.stations.GatedStation;
 import org.oristool.qesm.stations.Station;
 
@@ -34,12 +35,18 @@ public class Main {
                   otherTimes.add(stations.get(k).getTimes());
                }
             }
+
+            ExpolynomialDistribution oldDistribution = station.approximation.getDistribution();
             station.updatePNWithApproxTimes(otherTimes);
 
-            double[] newTimes = station.exec();
-            if (station.isTimesDiffInThreshold(newTimes, 10E-9)) {
-               nStationCompleted++;
+            if (oldDistribution != null) {
+               double difference = Math
+                     .abs(station.approximation.getDistribution().getDelta() - oldDistribution.getDelta());
+               if (difference < 10E-9) {
+                  nStationCompleted++;
+               }
             } else {
+               double[] newTimes = station.exec();
                station.setTimes(newTimes);
             }
          }
