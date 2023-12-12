@@ -12,7 +12,6 @@ public class Main {
         List<Station> stations = new ArrayList<Station>();
         stations.add(new GatedStation());
         stations.add(new GatedStation());
-        stations.add(new GatedStation());
 
         int nStationCompleted = 0;
         
@@ -22,7 +21,7 @@ public class Main {
                 Station station = stations.get(i);
 
                 if (station.getTimes() == null) {
-                    double[] newTimes = station.execAndSort();
+                    double[] newTimes = station.exec();
                     station.setTimes(newTimes);
                 } else {
                     List<double[]> otherTimes = new ArrayList<double[]>();
@@ -33,7 +32,7 @@ public class Main {
                     }
                     station.updateWaitingTime(otherTimes);
                     
-                    double[] newTimes = station.execAndSort();
+                    double[] newTimes = station.exec();
                     if(station.isTimesDiffInThreshold(newTimes, 10E-9)) {
                         nStationCompleted++;
                     } else {

@@ -106,7 +106,7 @@ public class TruncatedExponentialApproximation extends Approximation {
         bodyLambda = BigDecimal.valueOf(bodyLambda).setScale(3, RoundingMode.HALF_UP).doubleValue();
 
         feature = StochasticTransitionFeature.newExpolynomial(
-                bodyLambda * Math.exp(bodyLambda * delta) / (1 - Math.exp(-bodyLambda * (upp - delta))) + " * Exp[" + (-1 * bodyLambda) + " x]",
+                bodyLambda * Math.exp(bodyLambda * delta) / (1 - Math.exp(-bodyLambda * (upp - delta))) + " * Exp[" + (-bodyLambda) + " x]",
                 new OmegaBigDecimal(String.valueOf(delta)),
                 new OmegaBigDecimal(String.valueOf(upp)));
 
