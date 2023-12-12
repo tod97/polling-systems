@@ -4,7 +4,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.oristool.qesm.stations.GatedStation;
-import org.oristool.qesm.stations.LimitedStation;
 import org.oristool.qesm.stations.Station;
 
 public class Main {
@@ -31,7 +30,7 @@ public class Main {
                             otherTimes.add(stations.get(k).getTimes());
                         }
                     }
-                    station.updateWaitingTime(otherTimes);
+                    station.updatePNWithApproxTimes(otherTimes);
                     
                     double[] newTimes = station.exec();
                     if(station.isTimesDiffInThreshold(newTimes, 10E-9)) {

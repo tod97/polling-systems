@@ -25,25 +25,26 @@ public class GatedStation extends Station {
       super();
    }
 
-   public void updateWaitingTime(List<double[]> times) {
+   public void updatePNWithApproxTimes(List<double[]> times) {
       if (times.size() > 0) {
-         build();
+         buildStation();
 
          ApproximationStation approxStation = new ApproximationStation();
-         approxStation.updateWaitingTime(times);
+         approxStation.updatePNWithApproxTimes(times);
          double[] approxCDF = approxStation.exec();
          StochasticTransitionFeature approxFeature = approxTimes(approxCDF);
 
          net.removeTransition(net.getTransition("t0"));
          Transition t0 = net.addTransition("t0");
          t0.addFeature(approxFeature);
+         t0.addFeature(new PostUpdater("p17=p15", net));
 
          net.addPostcondition(t0, net.getPlace("p1"));
          net.addPrecondition(net.getPlace("p0"), t0);
       }
    }
 
-   protected void build() {
+   protected void buildStation() {
       net = new PetriNet();
       marking = new Marking();
 

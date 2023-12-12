@@ -4,14 +4,11 @@ import java.math.BigDecimal;
 import java.util.Arrays;
 import java.util.List;
 
-import org.oristool.models.stpn.RewardRate;
 import org.oristool.models.stpn.TransientSolution;
-import org.oristool.models.stpn.TransientSolutionViewer;
 import org.oristool.models.stpn.trans.RegTransient;
 import org.oristool.models.stpn.trees.DeterministicEnablingState;
 import org.oristool.models.stpn.trees.StochasticTransitionFeature;
 import org.oristool.petrinet.Marking;
-import org.oristool.petrinet.MarkingCondition;
 import org.oristool.petrinet.PetriNet;
 import org.oristool.qesm.approximations.TruncatedExponentialApproximation;
 
@@ -32,11 +29,11 @@ public abstract class Station {
     }
 
     public Station() {
-        build();
+        buildStation();
     }
 
-    public abstract void updateWaitingTime(List<double[]> times);
-    protected abstract void build();
+    public abstract void updatePNWithApproxTimes(List<double[]> times);
+    protected abstract void buildStation();
     
     public double[] exec() {
         //String cond = "pEnd > 0";

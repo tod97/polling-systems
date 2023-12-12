@@ -16,9 +16,9 @@ public class ApproximationStation extends Station {
       super();
    }
 
-   public void updateWaitingTime(List<double[]> times) {
+   public void updatePNWithApproxTimes(List<double[]> times) {
       if (times.size() > 0) {
-         build();
+         buildStation();
 
          for (int i = 0; i < times.size(); i++) {
             Transition transition = net.addTransition("det_t"+i);
@@ -40,7 +40,7 @@ public class ApproximationStation extends Station {
       }
    }
 
-   protected void build() {
+   protected void buildStation() {
       net = new PetriNet();
       marking = new Marking();
       Place p0 = net.addPlace("p0");
