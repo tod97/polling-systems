@@ -28,26 +28,18 @@ public class GatedStation extends Station {
    public void updateWaitingTime(List<double[]> times) {
       if (times.size() > 0) {
          build();
+
+         TempStation temp = new TempStation();
+         temp.updateWaitingTime(times);
+         double[] tempCDF = temp.exec();
+         StochasticTransitionFeature tempFeature = approxTimes(tempCDF);
+
          net.removeTransition(net.getTransition("t0"));
+         Transition t0 = net.addTransition("t0");
+         t0.addFeature(tempFeature);
 
-         for (int i = 0; i < times.size(); i++) {
-            Transition transition = net.addTransition("det_t"+i);
-            transition.addFeature(approxTimes(times.get(i)));
-            Place place = net.addPlace("det_p"+i);
-
-            if (i == 0) {
-               net.addPrecondition(net.getPlace("p0"), transition);
-            } else {
-               net.addPrecondition(net.getPlace("det_p"+(i-1)), transition);
-            }
-            net.addPostcondition(transition, place);
-         }
-
-         Transition immTransition = net.addTransition("imm_t");
-         immTransition.addFeature(new PostUpdater("p17=p15", net));
-         immTransition.addFeature(StochasticTransitionFeature.newDeterministicInstance(new BigDecimal("0"), MarkingExpr.from("1", net)));
-         net.addPrecondition(net.getPlace("det_p"+(times.size()-1)), immTransition);
-         net.addPostcondition(immTransition, net.getPlace("p1"));
+         net.addPostcondition(t0, net.getPlace("p1"));
+         net.addPrecondition(net.getPlace("p0"), t0);
       }
    }
 

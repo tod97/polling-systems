@@ -31,21 +31,25 @@ public abstract class Station {
     protected abstract void build();
     
     public double[] exec() {
+        //String cond = "pEnd > 0";
+
         RegTransient analysis = RegTransient.builder()
                 .greedyPolicy(this.upTime, this.upTime.divide(new BigDecimal("1000")))
                 .timeStep(this.timeStep)
-                .markingFilter(MarkingCondition.fromString("p16 == 1"))
+                //.markingFilter(MarkingCondition.fromString(cond))
                 .build();
 
         TransientSolution<DeterministicEnablingState, Marking> solution = analysis.compute(net, marking);
-        TransientSolution<DeterministicEnablingState, RewardRate> rewardSolution = TransientSolution.computeRewards(false, solution, RewardRate.fromString("p16 == 1"));
+        //TransientSolution<DeterministicEnablingState, RewardRate> rewardSolution = TransientSolution.computeRewards(false, solution, RewardRate.fromString(cond));
 
-        double[] CDF = new double[rewardSolution.getSolution().length];
+        double[] CDF = new double[solution.getSolution().length];
 
         for(int i = 0; i < CDF.length; i++) {
-            CDF[i] = rewardSolution.getSolution()[i][0][0];
+            CDF[i] = solution.getSolution()[i][0][0];
         }
 
+        // TODO remove sort
+        Arrays.sort(CDF);
         return CDF;
     }
 

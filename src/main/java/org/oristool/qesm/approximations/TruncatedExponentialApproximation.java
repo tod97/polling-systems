@@ -14,10 +14,6 @@ import java.util.stream.IntStream;
 
 public class TruncatedExponentialApproximation extends Approximation {
 
-    public TruncatedExponentialApproximation(){
-        super();
-    }
-
     @Override
     public StochasticTransitionFeature getApproximatedStochasticTransitionFeature(double[] cdf, double low, double upp, BigDecimal step) {
         StochasticTransitionFeature feature;
