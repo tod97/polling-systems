@@ -4,7 +4,7 @@ import java.math.BigDecimal;
 
 import org.oristool.models.stpn.trees.StochasticTransitionFeature;
 
-public class UniformDistribution implements IDistribution {
+public class UniformDistribution extends Distribution {
 
    BigDecimal eft;
    BigDecimal lft;

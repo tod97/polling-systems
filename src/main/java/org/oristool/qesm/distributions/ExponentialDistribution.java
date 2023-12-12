@@ -5,7 +5,7 @@ import java.math.BigDecimal;
 import org.oristool.models.stpn.MarkingExpr;
 import org.oristool.models.stpn.trees.StochasticTransitionFeature;
 
-public class ExponentialDistribution implements IDistribution {
+public class ExponentialDistribution extends Distribution {
 
    BigDecimal expRate;
    MarkingExpr clockRate;
