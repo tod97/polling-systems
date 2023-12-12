@@ -37,7 +37,7 @@ public class GatedStation extends Station {
          net.removeTransition(net.getTransition("t0"));
          Transition t0 = net.addTransition("t0");
          t0.addFeature(approxFeature);
-         t0.addFeature(new PostUpdater("p17=p15", net));
+         t0.addFeature(new PostUpdater("p17=p15;p15=0", net));
 
          net.addPostcondition(t0, net.getPlace("p1"));
          net.addPrecondition(net.getPlace("p0"), t0);
