@@ -32,7 +32,7 @@ public class ApproximationStation extends Station {
          Transition immTransition = net.addTransition("imm_t");
          immTransition.addFeature(
                StochasticTransitionFeature.newDeterministicInstance(new BigDecimal("0"), MarkingExpr.from("1", net)));
-         net.addPrecondition(net.getPlace("p" + (times.size() - 1)), immTransition);
+         net.addPrecondition(net.getPlace("p" + times.size()), immTransition);
          net.addPostcondition(immTransition, net.getPlace("pEnd"));
       }
    }
