@@ -35,7 +35,10 @@ public class LimitedStation extends Station {
          double[] approxCDF = approxStation.exec();
          StochasticTransitionFeature approxFeature = approxTimes(approxCDF);
 
+         net.removePrecondition(net.getPrecondition(net.getPlace("p0"), net.getTransition("t0")));
+         net.removePostcondition(net.getPostcondition(net.getTransition("t0"), net.getPlace("p1")));
          net.removeTransition(net.getTransition("t0"));
+
          Transition t0 = net.addTransition("t0");
          t0.addFeature(approxFeature);
 
