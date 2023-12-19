@@ -40,6 +40,8 @@ public class GatedStation extends Station {
       if (times.size() > 0) {
          ApproximationStation approxStation = new ApproximationStation();
          approxStation.updatePNWithApproxTimes(times);
+         // FIXME: update upTime to a reasonable value
+         approxStation.setUpTime(new BigDecimal(20));
          double[] approxCDF = approxStation.exec();
          StochasticTransitionFeature approxFeature = approxTimes(approxCDF);
 

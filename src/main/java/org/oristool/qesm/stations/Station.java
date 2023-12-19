@@ -14,11 +14,11 @@ import org.oristool.petrinet.PetriNet;
 import org.oristool.qesm.approximations.TruncatedExponentialApproximation;
 
 public abstract class Station {
-   protected BigDecimal upTime = new BigDecimal("5");
+   private BigDecimal upTime = new BigDecimal("5");
 
    protected PetriNet net;
    protected Marking marking;
-   protected double[] times;
+   private double[] times;
    public TruncatedExponentialApproximation approximation;
 
    public abstract void updatePNWithApproxTimes(List<double[]> times);
