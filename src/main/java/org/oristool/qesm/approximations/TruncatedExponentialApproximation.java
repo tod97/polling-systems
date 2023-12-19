@@ -105,7 +105,7 @@ public class TruncatedExponentialApproximation extends Approximation {
                      }
                   }.init(delta, upp, x[i], cdf[i]), 0.0001));
          } catch (Exception e) {
-            System.err.println("Exception: " + e.getMessage());
+            // System.err.println("Exception: " + e.getMessage());
          }
          // }
       }
