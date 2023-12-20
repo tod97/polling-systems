@@ -58,7 +58,9 @@ public class Main {
                station.setTimes(newTimes);
             }
             System.out.println("- Station " + i);
+            System.out.println("BodyLambda: " + station.approximation.getDistribution().getBodyLambda());
             System.out.println("Delta: " + station.approximation.getDistribution().getDelta());
+            System.out.println("Upp: " + station.approximation.getDistribution().getUpp());
             System.out.println();
          }
 
@@ -66,6 +68,7 @@ public class Main {
          System.out.println("SUMMARY: ");
          System.out.println("Completed Stations: " + nStationCompleted);
          System.out.println("--------------------------------------------------");
+         System.out.println();
          if (nStationCompleted == stations.size()) {
             break;
          }
