@@ -15,19 +15,6 @@ public class Main {
       stations.add(new GatedStation());
 
       int nStationCompleted = 0;
-      List<double[]> cumulativeTimes = new ArrayList<double[]>();
-      // INIT STATIONS
-      for (int i = 0; i < stations.size(); i++) {
-         Station station = stations.get(i);
-
-         double[] stationTimes = station.exec();
-         station.setTimes(stationTimes);
-         station.updatePNWithApproxTimes(cumulativeTimes);
-
-         stationTimes = station.exec();
-         station.setTimes(stationTimes);
-         cumulativeTimes.add(stationTimes);
-      }
 
       // EXECUTE APPROXIMATION
       while (true) {
@@ -37,7 +24,7 @@ public class Main {
 
             List<double[]> otherTimes = new ArrayList<double[]>();
             for (int k = 0; k < stations.size(); k++) {
-               if (k != i) {
+               if (k != i && stations.get(k).getTimes() != null) {
                   otherTimes.add(stations.get(k).getTimes());
                }
             }
@@ -58,13 +45,17 @@ public class Main {
                double[] newTimes = station.exec();
                station.setTimes(newTimes);
             }
+
             System.out.println("- Station " + i);
-            System.out.println("BodyLambda: " + station.approximation.getDistribution().getBodyLambda());
-            System.out.println("Delta: " + station.approximation.getDistribution().getDelta());
-            System.out.println("Upp: " + station.approximation.getDistribution().getUpp());
-            System.out.println();
+            System.out.println("Other times: " + otherTimes.size());
+            if (station.approximation.getDistribution() != null) {
+               System.out.println("BodyLambda: " + station.approximation.getDistribution().getBodyLambda());
+               System.out.println("Delta: " + station.approximation.getDistribution().getDelta());
+               System.out.println("Upp: " + station.approximation.getDistribution().getUpp());
+            }
          }
 
+         System.out.println();
          System.out.println("--------------------------------------------------");
          System.out.println("SUMMARY: ");
          System.out.println("Completed Stations: " + nStationCompleted);
