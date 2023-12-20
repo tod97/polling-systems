@@ -28,14 +28,9 @@ public class LimitedStation extends Station {
 
    public void updatePNWithApproxTimes(List<double[]> times) {
       buildStation();
-      net.removePrecondition(net.getPrecondition(net.getPlace("p0"), net.getTransition("t0")));
-      net.removePostcondition(net.getPostcondition(net.getTransition("t0"), net.getPlace("p1")));
-      net.removeTransition(net.getTransition("t0"));
 
       Transition t0 = net.addTransition("t0");
-
-      net.addPostcondition(t0, net.getPlace("p1"));
-      net.addPrecondition(net.getPlace("p0"), t0);
+      t0.removeFeature(StochasticTransitionFeature.class);
 
       if (times.size() > 0) {
          ApproximationStation approxStation = new ApproximationStation();

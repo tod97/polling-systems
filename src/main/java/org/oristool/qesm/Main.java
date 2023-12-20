@@ -23,6 +23,7 @@ public class Main {
          double[] stationTimes = station.exec();
          station.setTimes(stationTimes);
          station.updatePNWithApproxTimes(cumulativeTimes);
+
          stationTimes = station.exec();
          station.setTimes(stationTimes);
          cumulativeTimes.add(stationTimes);
