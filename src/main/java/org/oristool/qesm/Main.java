@@ -30,7 +30,7 @@ public class Main {
             }
 
             ExpolynomialDistribution oldDistribution = station.approximation.getDistribution();
-            station.updatePNWithApproxTimes(otherTimes);
+            station.updatePNWithTimes(otherTimes);
 
             if (oldDistribution != null) {
                double difference = Math

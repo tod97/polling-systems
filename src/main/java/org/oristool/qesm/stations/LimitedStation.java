@@ -26,7 +26,7 @@ public class LimitedStation extends Station {
       super();
    }
 
-   public void updatePNWithApproxTimes(List<double[]> times) {
+   public void updatePNWithTimes(List<double[]> times) {
       buildStation();
 
       Transition t0 = net.addTransition("t0");
@@ -34,7 +34,7 @@ public class LimitedStation extends Station {
 
       if (times.size() > 0) {
          ApproximationStation approxStation = new ApproximationStation();
-         approxStation.updatePNWithApproxTimes(times);
+         approxStation.updatePNWithTimes(times);
          double[] approxCDF = approxStation.exec();
          StochasticTransitionFeature approxFeature = approxTimes(approxCDF);
 

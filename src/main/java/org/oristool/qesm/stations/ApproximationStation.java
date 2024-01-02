@@ -16,7 +16,7 @@ public class ApproximationStation extends Station {
       super();
    }
 
-   public void updatePNWithApproxTimes(List<double[]> times) {
+   public void updatePNWithTimes(List<double[]> times) {
       if (times.size() > 0) {
          buildStation();
 
