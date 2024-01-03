@@ -2,13 +2,19 @@ package org.oristool.qesm;
 
 import java.util.ArrayList;
 import java.util.List;
-
+import org.jfree.data.xy.XYSeries;
+import org.jfree.data.xy.XYSeriesCollection;
 import org.oristool.qesm.distributions.ExpolynomialDistribution;
+import org.oristool.qesm.printers.LineChartPrinter;
 import org.oristool.qesm.stations.GatedStation;
 import org.oristool.qesm.stations.Station;
 
 public class Main {
    public static void main(String[] args) {
+      runApproximator();
+   }
+
+   public static void runApproximator() {
       List<Station> stations = new ArrayList<Station>();
       stations.add(new GatedStation());
       stations.add(new GatedStation());
@@ -65,5 +71,27 @@ public class Main {
             break;
          }
       }
+   }
+
+   public static void printExample() {
+      var series = new XYSeries("2016");
+      series.add(1, 567);
+      series.add(2, 612);
+      series.add(3, 800);
+      series.add(4, 980);
+      series.add(5, 1410);
+      series.add(6, 2350);
+
+      printSeries(List.of(series));
+   }
+
+   private static void printSeries(List<XYSeries> series) {
+      var dataset = new XYSeriesCollection();
+      for (XYSeries s : series) {
+         dataset.addSeries(s);
+      }
+
+      var ex = new LineChartPrinter(dataset, "Execution time every iteration", "Iteration", "Time (ms)");
+      ex.setVisible(true);
    }
 }
