@@ -16,14 +16,20 @@ public class Main {
 
    public static void runApproximator() {
       List<Station> stations = new ArrayList<Station>();
+      List<XYSeries> series = new ArrayList<XYSeries>();
+
       stations.add(new GatedStation());
       stations.add(new GatedStation());
-      // stations.add(new GatedStation());
+      stations.add(new GatedStation());
 
       int nStationCompleted = 0;
 
+      for (int i = 0; i < stations.size(); i++) {
+         series.add(new XYSeries("Station " + (i + 1)));
+      }
+
       // EXECUTE APPROXIMATION
-      while (true) {
+      for (int count = 0; count < 1000; count++) {
          nStationCompleted = 0;
          for (int i = 0; i < stations.size(); i++) {
             Station station = stations.get(i);
@@ -44,22 +50,18 @@ public class Main {
 
             if (oldDistribution != null && newDistribution != null) {
                double difference = Math
-                     .abs(newDistribution.getDelta() - oldDistribution.getDelta());
-               if (difference < 10E-6) {
+                     .abs(newDistribution.getBodyLambda() - oldDistribution.getBodyLambda());
+               if (difference < 10E-2) {
                   nStationCompleted++;
                }
             }
 
-            System.out.println("- Station " + i);
-            System.out.println("Other times: " + otherStations.size());
-            System.out.println("BodyLambda: " + station.approximation.getDistribution().getBodyLambda());
-            System.out.println("Delta: " + station.approximation.getDistribution().getDelta());
-            System.out.println("Upp: " + station.approximation.getDistribution().getUpp());
+            System.out.println(station);
+            series.get(i).add(count + 1, station.approximation.getDistribution().getBodyLambda());
          }
 
          System.out.println();
          System.out.println("--------------------------------------------------");
-         System.out.println("SUMMARY: ");
          System.out.println("Completed Stations: " + nStationCompleted);
          System.out.println("--------------------------------------------------");
          System.out.println();
@@ -67,6 +69,8 @@ public class Main {
             break;
          }
       }
+
+      printSeries(series);
    }
 
    public static void printExample() {
@@ -87,7 +91,7 @@ public class Main {
          dataset.addSeries(s);
       }
 
-      var ex = new LineChartPrinter(dataset, "Execution time every iteration", "Iteration", "Time (ms)");
+      var ex = new LineChartPrinter(dataset, "Execution time every iteration", "Iteration", "bodyLambda");
       ex.setVisible(true);
    }
 }

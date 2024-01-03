@@ -30,6 +30,14 @@ public abstract class Station {
       this.approximation = new TruncatedExponentialApproximation();
    }
 
+   @Override
+   public String toString() {
+      return "- Station " + "\n" +
+            "BodyLambda: " + approximation.getDistribution().getBodyLambda() + "\n" +
+            "Delta: " + approximation.getDistribution().getDelta() + "\n" +
+            "Upp: " + approximation.getDistribution().getUpp();
+   }
+
    public double[] exec() {
       String cond = "pEnd > 0";
 
