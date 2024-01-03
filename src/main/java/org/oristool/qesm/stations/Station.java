@@ -21,7 +21,7 @@ public abstract class Station {
    private double[] times;
    public TruncatedExponentialApproximation approximation;
 
-   public abstract void updatePNWithTimes(List<double[]> times);
+   public abstract void updatePNWithOtherStations(List<Station> stations);
 
    protected abstract void buildStation();
 

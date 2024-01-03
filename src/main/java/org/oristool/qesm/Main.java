@@ -18,7 +18,7 @@ public class Main {
       List<Station> stations = new ArrayList<Station>();
       stations.add(new GatedStation());
       stations.add(new GatedStation());
-      stations.add(new GatedStation());
+      // stations.add(new GatedStation());
 
       int nStationCompleted = 0;
 
@@ -28,37 +28,33 @@ public class Main {
          for (int i = 0; i < stations.size(); i++) {
             Station station = stations.get(i);
 
-            List<double[]> otherTimes = new ArrayList<double[]>();
+            List<Station> otherStations = new ArrayList<Station>();
             for (int k = 0; k < stations.size(); k++) {
                if (k != i && stations.get(k).getTimes() != null) {
-                  otherTimes.add(stations.get(k).getTimes());
+                  otherStations.add(stations.get(k));
                }
             }
 
             ExpolynomialDistribution oldDistribution = station.approximation.getDistribution();
-            station.updatePNWithTimes(otherTimes);
+            station.updatePNWithOtherStations(otherStations);
+            double[] newTimes = station.exec();
+            station.approxTimes(newTimes);
+            station.setTimes(newTimes);
+            ExpolynomialDistribution newDistribution = station.approximation.getDistribution();
 
-            if (oldDistribution != null) {
+            if (oldDistribution != null && newDistribution != null) {
                double difference = Math
-                     .abs(station.approximation.getDistribution().getDelta() - oldDistribution.getDelta());
+                     .abs(newDistribution.getDelta() - oldDistribution.getDelta());
                if (difference < 10E-6) {
                   nStationCompleted++;
-               } else {
-                  double[] newTimes = station.exec();
-                  station.setTimes(newTimes);
                }
-            } else {
-               double[] newTimes = station.exec();
-               station.setTimes(newTimes);
             }
 
             System.out.println("- Station " + i);
-            System.out.println("Other times: " + otherTimes.size());
-            if (station.approximation.getDistribution() != null) {
-               System.out.println("BodyLambda: " + station.approximation.getDistribution().getBodyLambda());
-               System.out.println("Delta: " + station.approximation.getDistribution().getDelta());
-               System.out.println("Upp: " + station.approximation.getDistribution().getUpp());
-            }
+            System.out.println("Other times: " + otherStations.size());
+            System.out.println("BodyLambda: " + station.approximation.getDistribution().getBodyLambda());
+            System.out.println("Delta: " + station.approximation.getDistribution().getDelta());
+            System.out.println("Upp: " + station.approximation.getDistribution().getUpp());
          }
 
          System.out.println();

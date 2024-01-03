@@ -16,13 +16,13 @@ public class ApproximationStation extends Station {
       super();
    }
 
-   public void updatePNWithTimes(List<double[]> times) {
-      if (times.size() > 0) {
+   public void updatePNWithOtherStations(List<Station> stations) {
+      if (stations.size() > 0) {
          buildStation();
 
-         for (int i = 0; i < times.size(); i++) {
+         for (int i = 0; i < stations.size(); i++) {
             Transition transition = net.addTransition("t" + i);
-            transition.addFeature(approxTimes(times.get(i)));
+            transition.addFeature(stations.get(i).approxTimes(stations.get(i).getTimes()));
 
             Place place = net.addPlace("p" + (i + 1));
             net.addPrecondition(net.getPlace("p" + i), transition);
@@ -32,7 +32,7 @@ public class ApproximationStation extends Station {
          Transition immTransition = net.addTransition("imm_t");
          immTransition.addFeature(
                StochasticTransitionFeature.newDeterministicInstance(new BigDecimal("0"), MarkingExpr.from("1", net)));
-         net.addPrecondition(net.getPlace("p" + times.size()), immTransition);
+         net.addPrecondition(net.getPlace("p" + stations.size()), immTransition);
          net.addPostcondition(immTransition, net.getPlace("pEnd"));
       }
    }
