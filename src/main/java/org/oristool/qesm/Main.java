@@ -73,18 +73,6 @@ public class Main {
       printSeries(series);
    }
 
-   public static void printExample() {
-      var series = new XYSeries("2016");
-      series.add(1, 567);
-      series.add(2, 612);
-      series.add(3, 800);
-      series.add(4, 980);
-      series.add(5, 1410);
-      series.add(6, 2350);
-
-      printSeries(List.of(series));
-   }
-
    private static void printSeries(List<XYSeries> series) {
       var dataset = new XYSeriesCollection();
       for (XYSeries s : series) {
