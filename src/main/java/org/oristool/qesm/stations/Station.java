@@ -32,6 +32,12 @@ public abstract class Station {
 
    @Override
    public String toString() {
+      if (approximation.getDistribution() == null) {
+         return "- Station " + "\n" +
+               "BodyLambda: " + "null" + "\n" +
+               "Delta: " + "null" + "\n" +
+               "Upp: " + "null";
+      }
       return "- Station " + "\n" +
             "BodyLambda: " + approximation.getDistribution().getBodyLambda() + "\n" +
             "Delta: " + approximation.getDistribution().getDelta() + "\n" +
