@@ -5,8 +5,7 @@ import java.util.List;
 
 import org.oristool.models.stpn.RewardRate;
 import org.oristool.models.stpn.TransientSolution;
-import org.oristool.models.stpn.trans.RegTransient;
-import org.oristool.models.stpn.trees.DeterministicEnablingState;
+import org.oristool.models.stpn.trans.TreeTransient;
 import org.oristool.models.stpn.trees.StochasticTransitionFeature;
 import org.oristool.petrinet.Marking;
 import org.oristool.petrinet.MarkingCondition;
@@ -47,14 +46,14 @@ public abstract class Station {
    public double[] exec() {
       String cond = "pEnd > 0";
 
-      RegTransient analysis = RegTransient.builder()
+      TreeTransient analysis = TreeTransient.builder()
             .greedyPolicy(this.upTime, this.upTime.divide(new BigDecimal("1000")))
             .timeStep(this.upTime.divide(new BigDecimal("100")))
             .markingFilter(MarkingCondition.fromString(cond))
             .build();
 
-      TransientSolution<DeterministicEnablingState, Marking> solution = analysis.compute(net, marking);
-      TransientSolution<DeterministicEnablingState, RewardRate> rewardSolution = TransientSolution.computeRewards(false,
+      TransientSolution<Marking, Marking> solution = analysis.compute(net, marking);
+      TransientSolution<Marking, RewardRate> rewardSolution = TransientSolution.computeRewards(false,
             solution,
             RewardRate.fromString(cond));
 
