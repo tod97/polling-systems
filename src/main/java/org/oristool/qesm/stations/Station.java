@@ -17,7 +17,7 @@ public abstract class Station {
 
    protected PetriNet net;
    protected Marking marking;
-   private double[] times;
+   private double[] CDF;
    public TruncatedExponentialApproximation approximation;
 
    public abstract void updatePNWithOtherStations(List<Station> stations);
@@ -66,31 +66,17 @@ public abstract class Station {
       return CDF;
    }
 
-   public boolean isTimesDiffInThreshold(double[] newTimes, double threshold) {
-      if (times.length != newTimes.length) {
-         return false;
-      }
-
-      for (int i = 0; i < times.length; i++) {
-         if (Math.abs(times[i] - newTimes[i]) > threshold) {
-            return false;
-         }
-      }
-
-      return true;
-   }
-
-   public StochasticTransitionFeature approxTimes(double[] times) {
-      return this.approximation.getApproximatedStochasticTransitionFeature(times, 0, this.upTime.doubleValue(),
+   public StochasticTransitionFeature approxCDF(double[] CDF) {
+      return this.approximation.getApproximatedStochasticTransitionFeature(CDF, 0, this.upTime.doubleValue(),
             this.upTime.divide(new BigDecimal("100")));
    }
 
-   public double[] getTimes() {
-      return times;
+   public double[] getCDF() {
+      return CDF;
    }
 
-   public void setTimes(double[] times) {
-      this.times = times;
+   public void setCDF(double[] CDF) {
+      this.CDF = CDF;
    }
 
    public BigDecimal getUpTime() {

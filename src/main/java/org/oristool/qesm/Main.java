@@ -36,16 +36,16 @@ public class Main {
 
             List<Station> otherStations = new ArrayList<Station>();
             for (int k = 0; k < stations.size(); k++) {
-               if (k != i && stations.get(k).getTimes() != null) {
+               if (k != i && stations.get(k).getCDF() != null) {
                   otherStations.add(stations.get(k));
                }
             }
 
             ExpolynomialDistribution oldDistribution = station.approximation.getDistribution();
             station.updatePNWithOtherStations(otherStations);
-            double[] newTimes = station.exec();
-            station.approxTimes(newTimes);
-            station.setTimes(newTimes);
+            double[] newCDF = station.exec();
+            station.approxCDF(newCDF);
+            station.setCDF(newCDF);
             ExpolynomialDistribution newDistribution = station.approximation.getDistribution();
 
             if (oldDistribution != null && newDistribution != null) {

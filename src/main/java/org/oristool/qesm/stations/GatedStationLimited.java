@@ -35,7 +35,7 @@ public class GatedStationLimited extends Station {
          ApproximationStation approxStation = new ApproximationStation();
          approxStation.updatePNWithOtherStations(stations);
          double[] approxCDF = approxStation.exec();
-         StochasticTransitionFeature approxFeature = approxStation.approxTimes(approxCDF);
+         StochasticTransitionFeature approxFeature = approxStation.approxCDF(approxCDF);
 
          t0.addFeature(approxFeature);
       } else {
