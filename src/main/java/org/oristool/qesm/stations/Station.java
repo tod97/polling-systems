@@ -13,7 +13,7 @@ import org.oristool.petrinet.PetriNet;
 import org.oristool.qesm.approximations.TruncatedExponentialApproximation;
 
 public abstract class Station {
-   private BigDecimal upTime = new BigDecimal("5");
+   private BigDecimal upTime = new BigDecimal("12");
 
    protected PetriNet net;
    protected Marking marking;
@@ -47,7 +47,7 @@ public abstract class Station {
       String cond = "pEnd > 0";
 
       TreeTransient analysis = TreeTransient.builder()
-            .greedyPolicy(this.upTime, this.upTime.divide(new BigDecimal("1000")))
+            .greedyPolicy(this.upTime, new BigDecimal(0))
             .timeStep(this.upTime.divide(new BigDecimal("100")))
             .markingFilter(MarkingCondition.fromString(cond))
             .build();
