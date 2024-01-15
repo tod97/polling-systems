@@ -35,8 +35,8 @@ public class LimitedStation extends Station {
       if (stations.size() > 0) {
          ApproximationStation approxStation = new ApproximationStation();
          approxStation.updatePNWithOtherStations(stations);
-         double[] approxCDF = approxStation.exec();
-         StochasticTransitionFeature approxFeature = approxStation.approxCDF(approxCDF);
+         double[] CDF = approxStation.exec();
+         StochasticTransitionFeature approxFeature = approxStation.approxCDF(CDF);
 
          t0.addFeature(approxFeature);
       } else {

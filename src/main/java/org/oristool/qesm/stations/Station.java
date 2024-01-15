@@ -19,6 +19,7 @@ public abstract class Station {
    protected Marking marking;
    private double[] CDF;
    public TruncatedExponentialApproximation approximation;
+   public StochasticTransitionFeature feature;
 
    public abstract void updatePNWithOtherStations(List<Station> stations);
 
@@ -29,15 +30,14 @@ public abstract class Station {
       this.approximation = new TruncatedExponentialApproximation();
    }
 
-   @Override
-   public String toString() {
+   public String report(int i) {
       if (approximation.getDistribution() == null) {
-         return "- Station " + "\n" +
+         return "- Station " + i + " completed\n" +
                "BodyLambda: " + "null" + "\n" +
                "Delta: " + "null" + "\n" +
                "Upp: " + "null";
       }
-      return "- Station " + "\n" +
+      return "- Station " + i + " completed\n" +
             "BodyLambda: " + approximation.getDistribution().getBodyLambda() + "\n" +
             "Delta: " + approximation.getDistribution().getDelta() + "\n" +
             "Upp: " + approximation.getDistribution().getUpp();
@@ -67,8 +67,11 @@ public abstract class Station {
    }
 
    public StochasticTransitionFeature approxCDF(double[] CDF) {
-      return this.approximation.getApproximatedStochasticTransitionFeature(CDF, 0, this.upTime.doubleValue(),
+      System.out.println(this.getClass().getSimpleName() + " - " + CDF[0] + ", " + CDF[1] + ", ..., " + CDF[99]
+            + ", " + CDF[100]);
+      this.feature = this.approximation.getApproximatedStochasticTransitionFeature(CDF, 0, this.upTime.doubleValue(),
             this.upTime.divide(new BigDecimal("100")));
+      return this.feature;
    }
 
    public double[] getCDF() {

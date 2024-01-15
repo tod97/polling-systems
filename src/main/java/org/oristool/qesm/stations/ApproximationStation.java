@@ -1,7 +1,6 @@
 package org.oristool.qesm.stations;
 
 import java.math.BigDecimal;
-import java.util.ArrayList;
 import java.util.List;
 
 import org.oristool.models.stpn.MarkingExpr;
@@ -15,33 +14,34 @@ public class ApproximationStation extends Station {
 
    public ApproximationStation() {
       super();
+      //this.setUpTime(getUpTime().multiply(BigDecimal.valueOf(10)));
    }
 
-   /* public void updatePNWithOtherStations(List<Station> stations) {
+   public void updatePNWithOtherStations(List<Station> stations) {
       if (stations.size() > 0) {
          buildStation();
-   
+
          for (int i = 0; i < stations.size(); i++) {
             Transition transition = net.addTransition("t" + i);
-            transition.addFeature(stations.get(i).approxCDF(stations.get(i).getCDF()));
-   
+            transition.addFeature(stations.get(i).feature);
+
             Place place = net.addPlace("p" + (i + 1));
             net.addPrecondition(net.getPlace("p" + i), transition);
             net.addPostcondition(transition, place);
          }
-   
+
          Transition immTransition = net.addTransition("imm_t");
          immTransition.addFeature(
                StochasticTransitionFeature.newDeterministicInstance(new BigDecimal("0"), MarkingExpr.from("1", net)));
          net.addPrecondition(net.getPlace("p" + stations.size()), immTransition);
          net.addPostcondition(immTransition, net.getPlace("pEnd"));
       }
-   } */
+   }
 
-   public void updatePNWithOtherStations(List<Station> stations) {
+   /* public void updatePNWithOtherStations(List<Station> stations) {
       if (stations.size() > 0) {
          buildStation();
-
+   
          // sum all times into one double[]
          List<double[]> CDFlist = new ArrayList<double[]>();
          CDFlist.add(stations.get(0).getCDF());
@@ -50,23 +50,23 @@ public class ApproximationStation extends Station {
                CDFlist.get(0)[i] += stations.get(k).getCDF()[i];
             }
          }
-
+   
          for (int i = 0; i < CDFlist.size(); i++) {
             Transition transition = net.addTransition("t" + i);
             transition.addFeature(approxCDF(CDFlist.get(i)));
-
+   
             Place place = net.addPlace("p" + (i + 1));
             net.addPrecondition(net.getPlace("p" + i), transition);
             net.addPostcondition(transition, place);
          }
-
+   
          Transition immTransition = net.addTransition("imm_t");
          immTransition.addFeature(
                StochasticTransitionFeature.newDeterministicInstance(new BigDecimal("0"), MarkingExpr.from("1", net)));
          net.addPrecondition(net.getPlace("p" + CDFlist.size()), immTransition);
          net.addPostcondition(immTransition, net.getPlace("pEnd"));
       }
-   }
+   } */
 
    protected void buildStation() {
       net = new PetriNet();

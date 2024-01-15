@@ -56,7 +56,8 @@ public class Main {
                }
             }
 
-            System.out.println(station);
+            System.out.println(station.report(i + 1));
+            System.out.println("--------------------------------------------------");
             series.get(i).add(count + 1, station.approximation.getDistribution().getBodyLambda());
          }
 

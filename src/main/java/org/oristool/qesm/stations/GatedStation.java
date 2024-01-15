@@ -33,8 +33,8 @@ public class GatedStation extends Station {
          t0.removeFeature(StochasticTransitionFeature.class);
          ApproximationStation approxStation = new ApproximationStation();
          approxStation.updatePNWithOtherStations(stations);
-         double[] approxCDF = approxStation.exec();
-         StochasticTransitionFeature approxFeature = approxStation.approxCDF(approxCDF);
+         double[] CDF = approxStation.exec();
+         StochasticTransitionFeature approxFeature = approxStation.approxCDF(CDF);
 
          t0.addFeature(approxFeature);
       }
