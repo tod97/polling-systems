@@ -67,8 +67,24 @@ public abstract class Station {
       System.out.println(this.getClass().getSimpleName() + " - [" + CDF[0] + ", " + CDF[1] + ", " + CDF[2] + ", ..., "
             + CDF[98] + ", " + CDF[99] + ", " + CDF[100] + "]");
 
-      this.feature = this.approximation.getApproximatedStochasticTransitionFeature(CDF, 0, this.upTime.doubleValue(),
-            this.upTime.divide(new BigDecimal("100")));
+      double[] subCDF = new double[CDF.length];
+      int start = 0;
+      int count = 0;
+      for (int i = 0; i < CDF.length; i++) {
+         if (CDF[i] > 0 && CDF[i] < 1) {
+            count++;
+            subCDF[count] = CDF[i];
+
+            if (count == 1) {
+               start = i;
+            }
+         }
+      }
+
+      double newUp = count * this.upTime.doubleValue() / CDF.length;
+      BigDecimal step = new BigDecimal(newUp / 100);
+
+      this.feature = this.approximation.getApproximatedStochasticTransitionFeature(subCDF, 0, newUp, step);
       return this.feature;
    }
 
