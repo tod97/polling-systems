@@ -13,7 +13,7 @@ import org.oristool.petrinet.PetriNet;
 import org.oristool.qesm.approximations.TruncatedExponentialApproximation;
 
 public abstract class Station {
-   private BigDecimal upTime = new BigDecimal("12");
+   private BigDecimal upTime = new BigDecimal("15");
 
    protected PetriNet net;
    protected Marking marking;
@@ -32,15 +32,11 @@ public abstract class Station {
 
    public String report(int i) {
       if (approximation.getDistribution() == null) {
-         return "- Station " + i + " completed\n" +
-               "BodyLambda: " + "null" + "\n" +
-               "Delta: " + "null" + "\n" +
-               "Upp: " + "null";
+         return "- Station " + i + " completed: distribution is null";
       }
-      return "- Station " + i + " completed\n" +
-            "BodyLambda: " + approximation.getDistribution().getBodyLambda() + "\n" +
-            "Delta: " + approximation.getDistribution().getDelta() + "\n" +
-            "Upp: " + approximation.getDistribution().getUpp();
+      return "- Station " + i + " completed: " + "BodyLambda: " + approximation.getDistribution().getBodyLambda()
+            + ", Delta: " + approximation.getDistribution().getDelta() + ", Upp: "
+            + approximation.getDistribution().getUpp();
    }
 
    public double[] exec() {
@@ -68,8 +64,9 @@ public abstract class Station {
    }
 
    public StochasticTransitionFeature approxCDF(double[] CDF) {
-      System.out.println(this.getClass().getSimpleName() + " - " + CDF[0] + ", " + CDF[1] + ", ..., " + CDF[99]
-            + ", " + CDF[100]);
+      System.out.println(this.getClass().getSimpleName() + " - [" + CDF[0] + ", " + CDF[1] + ", " + CDF[2] + ", ..., "
+            + CDF[98] + ", " + CDF[99] + ", " + CDF[100] + "]");
+
       this.feature = this.approximation.getApproximatedStochasticTransitionFeature(CDF, 0, this.upTime.doubleValue(),
             this.upTime.divide(new BigDecimal("100")));
       return this.feature;

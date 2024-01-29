@@ -29,14 +29,29 @@ public class GatedStation extends Station {
       buildStation();
 
       if (stations.size() > 0) {
-         Transition t0 = net.getTransition("t0");
-         t0.removeFeature(StochasticTransitionFeature.class);
-         ApproximationStation approxStation = new ApproximationStation();
-         approxStation.updatePNWithOtherStations(stations);
-         double[] CDF = approxStation.exec();
-         StochasticTransitionFeature approxFeature = approxStation.approxCDF(CDF);
+         // REMOVE t0
+         net.removePostcondition(net.getPostcondition(net.getTransition("t0"), net.getPlace("p1")));
+         net.removePrecondition(net.getPrecondition(net.getPlace("p0"), net.getTransition("t0")));
+         net.removeTransition(net.getTransition("t0"));
 
-         t0.addFeature(approxFeature);
+         for (int i = 0; i < stations.size(); i++) {
+            Transition transition = net.addTransition("at" + i);
+            transition.addFeature(stations.get(i).feature);
+
+            Place place = net.addPlace("ap" + (i + 1));
+            if (i == 0) {
+               net.addPrecondition(net.getPlace("p0"), transition);
+            } else {
+               net.addPrecondition(net.getPlace("ap" + i), transition);
+            }
+            net.addPostcondition(transition, place);
+         }
+
+         Transition immTransition = net.addTransition("imm_t");
+         immTransition.addFeature(
+               StochasticTransitionFeature.newDeterministicInstance(new BigDecimal("0"), MarkingExpr.from("1", net)));
+         net.addPrecondition(net.getPlace("ap" + stations.size()), immTransition);
+         net.addPostcondition(immTransition, net.getPlace("p1"));
       }
    }
 

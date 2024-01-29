@@ -14,7 +14,6 @@ public class ApproximationStation extends Station {
 
    public ApproximationStation() {
       super();
-      //this.setUpTime(getUpTime().multiply(BigDecimal.valueOf(10)));
    }
 
    public void updatePNWithOtherStations(List<Station> stations) {

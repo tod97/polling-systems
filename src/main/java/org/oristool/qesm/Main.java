@@ -1,5 +1,6 @@
 package org.oristool.qesm;
 
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 import org.jfree.data.xy.XYSeries;
@@ -16,7 +17,9 @@ public class Main {
 
    public static void runApproximator() {
       List<Station> stations = new ArrayList<Station>();
-      List<XYSeries> series = new ArrayList<XYSeries>();
+      List<XYSeries> bodyLamdaSeries = new ArrayList<XYSeries>();
+      List<XYSeries> deltaSeries = new ArrayList<XYSeries>();
+      List<XYSeries> uppSeries = new ArrayList<XYSeries>();
 
       stations.add(new GatedStation());
       stations.add(new GatedStation());
@@ -25,7 +28,9 @@ public class Main {
       int nStationCompleted = 0;
 
       for (int i = 0; i < stations.size(); i++) {
-         series.add(new XYSeries("Station " + (i + 1)));
+         bodyLamdaSeries.add(new XYSeries("Station " + (i + 1)));
+         deltaSeries.add(new XYSeries("Station " + (i + 1)));
+         uppSeries.add(new XYSeries("Station " + (i + 1)));
       }
 
       // EXECUTE APPROXIMATION
@@ -43,6 +48,8 @@ public class Main {
 
             ExpolynomialDistribution oldDistribution = station.approximation.getDistribution();
             station.updatePNWithOtherStations(otherStations);
+            /* station.setUpTime(
+                  station.getUpTime().add(station.getUpTime().multiply(BigDecimal.valueOf(count + 1)))); */
             double[] newCDF = station.exec();
             station.approxCDF(newCDF);
             station.setCDF(newCDF);
@@ -58,29 +65,32 @@ public class Main {
 
             System.out.println(station.report(i + 1));
             System.out.println("--------------------------------------------------");
-            series.get(i).add(count + 1, station.approximation.getDistribution().getBodyLambda());
+            bodyLamdaSeries.get(i).add(count + 1, station.approximation.getDistribution().getBodyLambda());
+            deltaSeries.get(i).add(count + 1, station.approximation.getDistribution().getDelta());
+            uppSeries.get(i).add(count + 1, station.approximation.getDistribution().getUpp());
          }
 
-         System.out.println();
          System.out.println("--------------------------------------------------");
          System.out.println("Completed Stations: " + nStationCompleted);
          System.out.println("--------------------------------------------------");
-         System.out.println();
+         System.out.println("--------------------------------------------------");
          if (nStationCompleted == stations.size()) {
             break;
          }
       }
 
-      printSeries(series);
+      printSeries(bodyLamdaSeries, "", "bodyLambda");
+      printSeries(deltaSeries, "", "delta");
+      printSeries(uppSeries, "", "upp");
    }
 
-   private static void printSeries(List<XYSeries> series) {
+   private static void printSeries(List<XYSeries> series, String title, String yAxis) {
       var dataset = new XYSeriesCollection();
       for (XYSeries s : series) {
          dataset.addSeries(s);
       }
 
-      var ex = new LineChartPrinter(dataset, "Execution time every iteration", "Iteration", "bodyLambda");
+      var ex = new LineChartPrinter(dataset, title, "Iteration", yAxis);
       ex.setVisible(true);
    }
 }
