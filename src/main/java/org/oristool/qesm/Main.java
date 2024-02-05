@@ -1,6 +1,5 @@
 package org.oristool.qesm;
 
-import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 import org.jfree.data.xy.XYSeries;
@@ -11,6 +10,8 @@ import org.oristool.qesm.stations.GatedStation;
 import org.oristool.qesm.stations.Station;
 
 public class Main {
+   private static final int nStations = 3;
+
    public static void main(String[] args) {
       runApproximator();
    }
@@ -21,9 +22,9 @@ public class Main {
       List<XYSeries> deltaSeries = new ArrayList<XYSeries>();
       List<XYSeries> uppSeries = new ArrayList<XYSeries>();
 
-      stations.add(new GatedStation());
-      stations.add(new GatedStation());
-      stations.add(new GatedStation());
+      for (int i = 0; i < nStations; i++) {
+         stations.add(new GatedStation());
+      }
 
       int nStationCompleted = 0;
 
