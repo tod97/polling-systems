@@ -65,24 +65,19 @@ public abstract class Station {
 
    public StochasticTransitionFeature approxCDF(double[] CDF) {
       System.out.println(this.getClass().getSimpleName() + " - [" + CDF[0] + ", " + CDF[1] + ", " + CDF[2] + ", ..., "
-            + CDF[98] + ", " + CDF[99] + ", " + CDF[100] + "]");
+            + CDF[CDF.length - 3] + ", " + CDF[CDF.length - 2] + ", " + CDF[CDF.length - 1] + "]");
 
       double[] subCDF = new double[CDF.length];
-      int start = 0;
       int count = 0;
       for (int i = 0; i < CDF.length; i++) {
          if (CDF[i] > 0 && CDF[i] < 1) {
             count++;
             subCDF[count] = CDF[i];
-
-            if (count == 1) {
-               start = i;
-            }
          }
       }
 
       double newUp = count * this.upTime.doubleValue() / CDF.length;
-      BigDecimal step = new BigDecimal(newUp / 100);
+      BigDecimal step = new BigDecimal(newUp / (CDF.length - 1));
 
       this.feature = this.approximation.getApproximatedStochasticTransitionFeature(subCDF, 0, newUp, step);
       return this.feature;
