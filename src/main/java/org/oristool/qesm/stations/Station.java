@@ -71,16 +71,12 @@ public abstract class Station {
       int count = 0;
       double epsilon = 1E-9;
       for (int i = 0; i < CDF.length; i++) {
-         if (CDF[i] <= 0) {
-            continue;
-         }
-         if (CDF[i] <= 1 - epsilon) {
+         if (CDF[i] > 0) {
             count++;
             subCDF[count] = CDF[i];
-         } else {
-            count++;
-            subCDF[count] = CDF[i];
-            break;
+            if (CDF[i] > 1 - epsilon) {
+               break;
+            }
          }
       }
 
