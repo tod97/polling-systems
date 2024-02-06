@@ -27,22 +27,6 @@ public class LimitedStation extends Station {
    }
 
    public void updatePNWithOtherStations(List<Station> stations) {
-      buildStation();
-
-      Transition t0 = net.getTransition("t0");
-      t0.removeFeature(StochasticTransitionFeature.class);
-
-      if (stations.size() > 0) {
-         ApproximationStation approxStation = new ApproximationStation();
-         approxStation.updatePNWithOtherStations(stations);
-         double[] CDF = approxStation.exec();
-         StochasticTransitionFeature approxFeature = approxStation.approxCDF(CDF);
-
-         t0.addFeature(approxFeature);
-      } else {
-         t0.addFeature(
-               StochasticTransitionFeature.newDeterministicInstance(new BigDecimal("0"), MarkingExpr.from("1", net)));
-      }
    }
 
    protected void buildStation() {
