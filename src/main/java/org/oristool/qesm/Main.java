@@ -1,5 +1,6 @@
 package org.oristool.qesm;
 
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 import org.jfree.data.xy.XYSeries;
@@ -40,10 +41,13 @@ public class Main {
          for (int i = 0; i < stations.size(); i++) {
             Station station = stations.get(i);
 
+            BigDecimal additionalUpTime = new BigDecimal(0);
             List<Station> otherStations = new ArrayList<Station>();
             for (int k = 0; k < stations.size(); k++) {
                if (k != i && stations.get(k).getCDF() != null) {
                   otherStations.add(stations.get(k));
+                  additionalUpTime = new BigDecimal(
+                        additionalUpTime.doubleValue() + stations.get(k).getUpTime().doubleValue());
                }
             }
 
@@ -51,7 +55,7 @@ public class Main {
             station.updatePNWithOtherStations(otherStations);
             /* station.setUpTime(
                   station.getUpTime().add(station.getUpTime().multiply(BigDecimal.valueOf(count + 1)))); */
-            double[] newCDF = station.exec();
+            double[] newCDF = station.exec(additionalUpTime);
             station.approxCDF(newCDF);
             station.setCDF(newCDF);
             ExpolynomialDistribution newDistribution = station.approximation.getDistribution();

@@ -39,8 +39,10 @@ public abstract class Station {
             + approximation.getDistribution().getUpp();
    }
 
-   public double[] exec() {
+   public double[] exec(BigDecimal additionalUpTime) {
       String cond = "pEnd > 0";
+      this.upTime = additionalUpTime.doubleValue() > 0 ? additionalUpTime : this.upTime;
+      System.out.println(this.upTime);
 
       RegTransient analysis = RegTransient.builder()
             .localEvaluationPeriod(1)
@@ -81,12 +83,8 @@ public abstract class Station {
       }
 
       double newUp = count * (this.upTime.doubleValue() / CDF.length);
-      BigDecimal step = new BigDecimal(newUp / (CDF.length - 1));
-
-      System.out.println("subCDF - [" + subCDF[0] + ", " + subCDF[1] + ", " + subCDF[2]
-            + ", ..., "
-            + subCDF[count - 2] + ", " + subCDF[count - 1] + ", " + subCDF[count] + "] / newUp = " + newUp
-            + " / step = " + step.doubleValue());
+      BigDecimal step = new BigDecimal(this.upTime.doubleValue() / (CDF.length - 1));
+      this.upTime = new BigDecimal(newUp);
 
       this.feature = this.approximation.getApproximatedStochasticTransitionFeature(subCDF, 0, newUp, step);
       return this.feature;
