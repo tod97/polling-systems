@@ -1,6 +1,7 @@
 package org.oristool.qesm.stations;
 
 import java.math.BigDecimal;
+import java.util.ArrayList;
 import java.util.List;
 
 import org.oristool.models.stpn.RewardRate;
@@ -67,23 +68,26 @@ public abstract class Station {
       System.out.println(this.getClass().getSimpleName() + " - [" + CDF[0] + ", " + CDF[1] + ", " + CDF[2] + ", ..., "
             + CDF[CDF.length - 3] + ", " + CDF[CDF.length - 2] + ", " + CDF[CDF.length - 1] + "]");
 
-      double[] subCDF = new double[CDF.length];
+      ArrayList<Double> subCDF = new ArrayList<>();
       int count = 0;
-      double epsilon = 1E-9;
+      double epsilon = 1E-3;
       for (int i = 0; i < CDF.length; i++) {
          if (CDF[i] > 0) {
             count++;
-            subCDF[count] = CDF[i];
+            subCDF.add(CDF[i]);
             if (CDF[i] > 1 - epsilon) {
                break;
             }
          }
       }
+      double[] newCDF = subCDF.stream().mapToDouble(Double::doubleValue).toArray();
+      double step = this.upTime.doubleValue() / (CDF.length - 1);
+      double newUp = count * step;
+      //double newUp = count * (this.upTime.doubleValue() / CDF.length);
+      //BigDecimal step = new BigDecimal(newUp / (CDF.length - 1));
 
-      double newUp = count * (this.upTime.doubleValue() / CDF.length);
-      BigDecimal step = new BigDecimal(newUp / (CDF.length - 1));
-
-      this.feature = this.approximation.getApproximatedStochasticTransitionFeature(subCDF, 0, newUp, step);
+      this.feature = this.approximation.getApproximatedStochasticTransitionFeature(newCDF, 0, newUp,
+            BigDecimal.valueOf(step));
       return this.feature;
    }
 
