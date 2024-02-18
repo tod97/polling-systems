@@ -6,7 +6,7 @@ import org.jfree.data.xy.XYSeries;
 import org.jfree.data.xy.XYSeriesCollection;
 import org.oristool.qesm.distributions.ExpolynomialDistribution;
 import org.oristool.qesm.printers.LineChartPrinter;
-import org.oristool.qesm.stations.GatedStation;
+import org.oristool.qesm.stations.ExhaustiveStation;
 import org.oristool.qesm.stations.Station;
 
 public class Main {
@@ -24,7 +24,7 @@ public class Main {
       List<XYSeries> uppSeries = new ArrayList<XYSeries>();
 
       for (int i = 0; i < nStations; i++) {
-         stations.add(new GatedStation());
+         stations.add(new ExhaustiveStation());
       }
 
       int nStationCompleted = 0;

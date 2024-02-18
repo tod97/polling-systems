@@ -3,13 +3,17 @@ package org.oristool.qesm.stations;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 import org.oristool.models.stpn.RewardRate;
+import org.oristool.models.stpn.SteadyStateSolution;
 import org.oristool.models.stpn.TransientSolution;
+import org.oristool.models.stpn.steady.RegSteadyState;
 import org.oristool.models.stpn.trans.RegTransient;
 import org.oristool.models.stpn.trees.DeterministicEnablingState;
 import org.oristool.models.stpn.trees.StochasticTransitionFeature;
 import org.oristool.petrinet.Marking;
+import org.oristool.petrinet.MarkingCondition;
 import org.oristool.petrinet.PetriNet;
 import org.oristool.qesm.approximations.TruncatedExponentialApproximation;
 
@@ -40,7 +44,68 @@ public abstract class Station {
             + approximation.getDistribution().getUpp();
    }
 
+   private Map<Marking, BigDecimal> getSteadyStateMap() {
+      RegSteadyState analysis = RegSteadyState.builder()
+            .stopOn(MarkingCondition.fromString("p0==0"))
+            .build();
+
+      SteadyStateSolution<Marking> solution = analysis.compute(this.net, this.marking);
+      Map<Marking, BigDecimal> m = solution.getSteadyState();
+
+      // Filter that removes non-p0 keys (it can be done better with sirio)
+      m.entrySet().removeIf(entry -> entry.getKey().toString().indexOf("p0") == -1);
+
+      return m;
+   }
+
+   public double[] getTransientCDF() {
+      return this.getTransientCDF(this.net, this.marking);
+   }
+
+   private double[] getTransientCDF(PetriNet net, Marking marking) {
+      String cond = "p0==0";
+      RegTransient analysis = RegTransient.builder()
+            .localEvaluationPeriod(1)
+            .globalEvaluationPeriod(1)
+            .greedyPolicy(this.upTime, new BigDecimal(0))
+            .timeStep(this.upTime.divide(new BigDecimal("100")))
+            .stopOn(MarkingCondition.fromString("p0==0"))
+            .build();
+
+      TransientSolution<DeterministicEnablingState, Marking> solution = analysis.compute(net, marking);
+      TransientSolution<DeterministicEnablingState, RewardRate> rewardSolution = TransientSolution.computeRewards(false,
+            solution,
+            RewardRate.fromString(cond));
+
+      double[] CDF = new double[rewardSolution.getSolution().length];
+
+      for (int i = 0; i < CDF.length; i++) {
+         CDF[i] = rewardSolution.getSolution()[i][0][0];
+      }
+
+      return CDF;
+   }
+
    public double[] exec() {
+      Map<Marking, BigDecimal> m = this.getSteadyStateMap();
+      ArrayList<Double> resultCDF = new ArrayList<>();
+
+      for (Map.Entry<Marking, BigDecimal> entry : m.entrySet()) {
+         double[] CDF = this.getTransientCDF(this.net, this.marking);
+
+         for (int i = 0; i < CDF.length; i++) {
+            if (resultCDF.size() <= i) {
+               resultCDF.add(CDF[i] * entry.getValue().doubleValue());
+            } else {
+               resultCDF.set(i, resultCDF.get(i) + CDF[i] * entry.getValue().doubleValue());
+            }
+         }
+      }
+
+      return resultCDF.stream().mapToDouble(Double::doubleValue).toArray();
+   }
+
+   public double[] exec1() {
       String cond = "pEnd > 0";
 
       RegTransient analysis = RegTransient.builder()

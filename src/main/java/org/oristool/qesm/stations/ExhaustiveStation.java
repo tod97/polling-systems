@@ -10,7 +10,6 @@ import org.oristool.math.expression.Expolynomial;
 import org.oristool.math.expression.Variable;
 import org.oristool.math.function.GEN;
 import org.oristool.math.function.PartitionedGEN;
-import org.oristool.models.pn.PostUpdater;
 import org.oristool.models.pn.Priority;
 import org.oristool.models.stpn.MarkingExpr;
 import org.oristool.models.stpn.trees.StochasticTransitionFeature;
@@ -19,24 +18,49 @@ import org.oristool.petrinet.PetriNet;
 import org.oristool.petrinet.Place;
 import org.oristool.petrinet.Transition;
 
-public class GatedStationLimited extends Station {
+public class ExhaustiveStation extends Station {
 
-   public GatedStationLimited() {
+   public ExhaustiveStation() {
       super();
    }
 
    public void updatePNWithOtherStations(List<Station> stations) {
+      buildStation();
+
+      if (stations.size() > 0) {
+         // REMOVE t0
+         net.removePostcondition(net.getPostcondition(net.getTransition("t0"), net.getPlace("p1")));
+         net.removePrecondition(net.getPrecondition(net.getPlace("p0"), net.getTransition("t0")));
+         net.removeTransition(net.getTransition("t0"));
+
+         for (int i = 0; i < stations.size(); i++) {
+            Transition transition = net.addTransition("at" + i);
+            transition.addFeature(stations.get(i).feature);
+
+            Place place = net.addPlace("ap" + (i + 1));
+            if (i == 0) {
+               net.addPrecondition(net.getPlace("p0"), transition);
+            } else {
+               net.addPrecondition(net.getPlace("ap" + i), transition);
+            }
+            net.addPostcondition(transition, place);
+         }
+
+         Transition immTransition = net.addTransition("imm_t");
+         immTransition.addFeature(
+               StochasticTransitionFeature.newDeterministicInstance(new BigDecimal("0"), MarkingExpr.from("1", net)));
+         net.addPrecondition(net.getPlace("ap" + stations.size()), immTransition);
+         net.addPostcondition(immTransition, net.getPlace("p1"));
+      }
    }
 
    protected void buildStation() {
       net = new PetriNet();
       marking = new Marking();
 
-      // Generating Nodes
+      //Generating Nodes
       Place p0 = net.addPlace("p0");
       Place p1 = net.addPlace("p1");
-      Place pEnd = net.addPlace("pEnd");
-      Place p15 = net.addPlace("p15");
       Place p16 = net.addPlace("p16");
       Place p17 = net.addPlace("p17");
       Transition t0 = net.addTransition("t0");
@@ -44,33 +68,27 @@ public class GatedStationLimited extends Station {
       Transition t3 = net.addTransition("t3");
       Transition t4 = net.addTransition("t4");
 
-      // Generating Connectors
-      net.addInhibitorArc(pEnd, t3);
+      //Generating Connectors
+      net.addInhibitorArc(p17, t2);
       net.addInhibitorArc(p0, t3);
-      net.addPostcondition(t2, pEnd);
+      net.addPrecondition(p17, t3);
+      net.addPostcondition(t3, p16);
+      net.addPrecondition(p1, t2);
       net.addPostcondition(t0, p1);
       net.addPrecondition(p0, t0);
-      net.addPrecondition(p15, t3);
       net.addPrecondition(p16, t4);
-      net.addPostcondition(t4, p15);
-      net.addPrecondition(p1, t2);
-      net.addPostcondition(t3, p16);
-      net.addInhibitorArc(p17, t2);
-      net.addPrecondition(p17, t3);
+      net.addPostcondition(t4, p17);
 
-      // Generating Properties
+      //Generating Properties
       marking.setTokens(p0, 1);
       marking.setTokens(p1, 0);
-      marking.setTokens(pEnd, 0);
-      marking.setTokens(p15, 0);
       marking.setTokens(p16, 5);
       marking.setTokens(p17, 0);
-      t0.addFeature(new PostUpdater("p17=p15", net));
       List<GEN> t0_gens = new ArrayList<>();
 
       DBMZone t0_d_0 = new DBMZone(new Variable("x"));
       Expolynomial t0_e_0 = Expolynomial.fromString("3 * Exp[-4 x] + x^1 * Exp[-2 x]");
-      // Normalization
+      //Normalization
       t0_e_0.multiply(new BigDecimal(8010.219010916156));
       t0_d_0.setCoefficient(new Variable("x"), new Variable("t*"), new OmegaBigDecimal("10"));
       t0_d_0.setCoefficient(new Variable("t*"), new Variable("x"), new OmegaBigDecimal("-5"));
