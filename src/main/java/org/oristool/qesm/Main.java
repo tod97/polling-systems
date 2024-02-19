@@ -7,11 +7,12 @@ import org.jfree.data.xy.XYSeries;
 import org.jfree.data.xy.XYSeriesCollection;
 import org.oristool.qesm.distributions.ExpolynomialDistribution;
 import org.oristool.qesm.printers.LineChartPrinter;
-import org.oristool.qesm.stations.GatedStation;
+import org.oristool.qesm.stations.ExhaustiveStation;
 import org.oristool.qesm.stations.Station;
 
 public class Main {
    private static final int nStations = 3;
+   private static final int nIterations = 1000;
 
    public static void main(String[] args) {
       runApproximator();
@@ -24,7 +25,7 @@ public class Main {
       List<XYSeries> uppSeries = new ArrayList<XYSeries>();
 
       for (int i = 0; i < nStations; i++) {
-         stations.add(new GatedStation());
+         stations.add(new ExhaustiveStation());
       }
 
       int nStationCompleted = 0;
@@ -36,7 +37,7 @@ public class Main {
       }
 
       // EXECUTE APPROXIMATION
-      for (int count = 0; count < 1000; count++) {
+      for (int count = 0; count < nIterations; count++) {
          nStationCompleted = 0;
          for (int i = 0; i < stations.size(); i++) {
             Station station = stations.get(i);
