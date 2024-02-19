@@ -3,6 +3,8 @@ package org.oristool.qesm.printers;
 import org.jfree.chart.ChartFactory;
 import org.jfree.chart.ChartPanel;
 import org.jfree.chart.JFreeChart;
+import org.jfree.chart.axis.NumberAxis;
+import org.jfree.chart.axis.ValueAxis;
 import org.jfree.chart.block.BlockBorder;
 import org.jfree.chart.plot.PlotOrientation;
 import org.jfree.chart.plot.XYPlot;
@@ -15,6 +17,7 @@ import javax.swing.JFrame;
 import java.awt.BasicStroke;
 import java.awt.Color;
 import java.awt.Font;
+import java.text.NumberFormat;
 
 public class LineChartPrinter extends JFrame {
 
@@ -71,6 +74,13 @@ public class LineChartPrinter extends JFrame {
 
       chart.setTitle(new TextTitle(title,
             new Font("Serif", java.awt.Font.BOLD, 18)));
+
+      NumberAxis rangeAxis = (NumberAxis) plot.getRangeAxis();
+      rangeAxis.setAutoRangeIncludesZero(false);
+
+      NumberFormat format = NumberFormat.getNumberInstance();
+      format.setMaximumFractionDigits(2);
+      rangeAxis.setNumberFormatOverride(format);
 
       return chart;
    }
