@@ -69,7 +69,7 @@ public abstract class Station {
             .globalEvaluationPeriod(1)
             .greedyPolicy(this.upTime, new BigDecimal(0))
             .timeStep(this.upTime.divide(new BigDecimal("100")))
-            .stopOn(MarkingCondition.fromString("p0==0"))
+            .stopOn(MarkingCondition.fromString(cond))
             .build();
 
       TransientSolution<DeterministicEnablingState, Marking> solution = analysis.compute(net, marking);
@@ -92,7 +92,7 @@ public abstract class Station {
       this.upTime = additionalUpTime.doubleValue() > 0 ? additionalUpTime : this.upTime;
 
       for (Map.Entry<Marking, BigDecimal> entry : m.entrySet()) {
-         double[] CDF = this.getTransientCDF(this.net, this.marking);
+         double[] CDF = this.getTransientCDF(this.net, entry.getKey());
 
          for (int i = 0; i < CDF.length; i++) {
             if (resultCDF.size() <= i) {
