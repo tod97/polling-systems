@@ -16,6 +16,7 @@ import javax.swing.BorderFactory;
 import javax.swing.JFrame;
 import java.awt.BasicStroke;
 import java.awt.Color;
+import java.awt.Dimension;
 import java.awt.Font;
 import java.text.NumberFormat;
 
@@ -84,6 +85,8 @@ public class LineChartPrinter extends JFrame {
 
       ValueAxis domainAxis = plot.getDomainAxis();
       domainAxis.setStandardTickUnits(NumberAxis.createIntegerTickUnits());
+
+      setPreferredSize(new Dimension(600, 500));
 
       return chart;
    }
