@@ -82,6 +82,9 @@ public class LineChartPrinter extends JFrame {
       format.setMaximumFractionDigits(2);
       rangeAxis.setNumberFormatOverride(format);
 
+      ValueAxis domainAxis = plot.getDomainAxis();
+      domainAxis.setStandardTickUnits(NumberAxis.createIntegerTickUnits());
+
       return chart;
    }
 }
