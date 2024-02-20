@@ -1,5 +1,6 @@
 package org.oristool.qesm;
 
+import java.awt.Point;
 import java.util.ArrayList;
 import java.util.List;
 import org.jfree.data.xy.XYSeries;
@@ -81,12 +82,12 @@ public class Main {
          }
       }
 
-      printSeries(bodyLamdaSeries, "", "bodyLambda");
-      printSeries(deltaSeries, "", "delta");
-      printSeries(uppSeries, "", "upp");
+      printSeries(bodyLamdaSeries, "", "bodyLambda", new Point(0, 0));
+      printSeries(deltaSeries, "", "delta", new Point(600, 0));
+      printSeries(uppSeries, "", "upp", new Point(1200, 0));
    }
 
-   private static void printSeries(List<XYSeries> series, String title, String yAxis) {
+   private static void printSeries(List<XYSeries> series, String title, String yAxis, Point point) {
       var dataset = new XYSeriesCollection();
       for (XYSeries s : series) {
          dataset.addSeries(s);
@@ -94,5 +95,6 @@ public class Main {
 
       var ex = new LineChartPrinter(dataset, title, "Iteration", yAxis);
       ex.setVisible(true);
+      ex.setLocation(point);
    }
 }
