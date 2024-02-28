@@ -6,7 +6,9 @@ import java.util.ArrayList;
 import java.util.List;
 import org.jfree.data.xy.XYSeries;
 import org.jfree.data.xy.XYSeriesCollection;
+import org.oristool.qesm.distributions.Distribution;
 import org.oristool.qesm.distributions.ExpolynomialDistribution;
+import org.oristool.qesm.distributions.ExponentialDistribution;
 import org.oristool.qesm.printers.LineChartPrinter;
 import org.oristool.qesm.stations.ExhaustiveStation;
 import org.oristool.qesm.stations.Station;
@@ -53,28 +55,35 @@ public class Main {
                }
             }
 
-            ExpolynomialDistribution oldDistribution = station.approximation.getDistribution();
+            Distribution oldDistribution = station.approximation.getDistribution();
             station.updatePNWithOtherStations(otherStations);
             /* station.setUpTime(
                   station.getUpTime().add(station.getUpTime().multiply(BigDecimal.valueOf(count + 1)))); */
             double[] newCDF = station.exec(additionalUpTime);
             station.approxCDF(newCDF);
             station.setCDF(newCDF);
-            ExpolynomialDistribution newDistribution = station.approximation.getDistribution();
+            Distribution newDistribution = station.approximation.getDistribution();
 
             if (oldDistribution != null && newDistribution != null) {
                double difference = Math
-                     .abs(newDistribution.getBodyLambda() - oldDistribution.getBodyLambda());
+                     .abs(newDistribution.getSignificantThreshold(oldDistribution));
                if (difference < 10E-2) {
                   nStationCompleted++;
                }
             }
 
-            System.out.println(station.report(i + 1));
-            System.out.println("--------------------------------------------------");
-            bodyLamdaSeries.get(i).add(count + 1, station.approximation.getDistribution().getBodyLambda());
-            deltaSeries.get(i).add(count + 1, station.approximation.getDistribution().getDelta());
-            uppSeries.get(i).add(count + 1, station.approximation.getDistribution().getUpp());
+            if (newDistribution instanceof ExpolynomialDistribution) {
+               ExpolynomialDistribution expDist = (ExpolynomialDistribution) newDistribution;
+               bodyLamdaSeries.get(i).add(count + 1, expDist.getBodyLambda());
+               deltaSeries.get(i).add(count + 1, expDist.getDelta());
+               uppSeries.get(i).add(count + 1, expDist.getUpp());
+            }
+            if (newDistribution instanceof ExponentialDistribution) {
+               ExponentialDistribution expDist = (ExponentialDistribution) newDistribution;
+               bodyLamdaSeries.get(i).add(count + 1, expDist.getExpRate().doubleValue());
+               //deltaSeries.get(i).add(count+1, expDist.getClockRate().doubleValue());
+            }
+
          }
 
          System.out.println("--------------------------------------------------");

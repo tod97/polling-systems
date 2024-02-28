@@ -4,4 +4,6 @@ import org.oristool.models.stpn.trees.StochasticTransitionFeature;
 
 public abstract class Distribution {
    public abstract StochasticTransitionFeature getStochasticTransitionFeature();
+
+   public abstract double getSignificantThreshold(Distribution other);
 }

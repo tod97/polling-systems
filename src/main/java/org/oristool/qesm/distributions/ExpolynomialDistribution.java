@@ -25,6 +25,14 @@ public class ExpolynomialDistribution extends Distribution {
    }
 
    @Override
+   public double getSignificantThreshold(Distribution other) {
+      if (other instanceof ExpolynomialDistribution) {
+         return this.getBodyLambda() - ((ExpolynomialDistribution) other).getBodyLambda();
+      }
+      return Double.POSITIVE_INFINITY;
+   }
+
+   @Override
    public String toString() {
       return "ExpolynomialDistribution [bodyLambda=" + bodyLambda + ", delta=" + delta + ", upp=" + upp + "]";
    }

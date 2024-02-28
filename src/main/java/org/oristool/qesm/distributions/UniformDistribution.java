@@ -20,7 +20,31 @@ public class UniformDistribution extends Distribution {
    }
 
    @Override
+   public double getSignificantThreshold(Distribution other) {
+      if (other instanceof UniformDistribution) {
+         return this.getEft().doubleValue() - ((UniformDistribution) other).getEft().doubleValue();
+      }
+      return Double.POSITIVE_INFINITY;
+   }
+
+   @Override
    public String toString() {
       return "UniformDistribution [eft=" + eft + ", lft=" + lft + "]";
+   }
+
+   public BigDecimal getEft() {
+      return eft;
+   }
+
+   public void setEft(BigDecimal eft) {
+      this.eft = eft;
+   }
+
+   public BigDecimal getLft() {
+      return lft;
+   }
+
+   public void setLft(BigDecimal lft) {
+      this.lft = lft;
    }
 }
