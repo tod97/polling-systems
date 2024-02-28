@@ -39,9 +39,7 @@ public abstract class Station {
       if (approximation.getDistribution() == null) {
          return "- Station " + i + " completed: distribution is null";
       }
-      return "- Station " + i + " completed: " + "BodyLambda: " + approximation.getDistribution().getBodyLambda()
-            + ", Delta: " + approximation.getDistribution().getDelta() + ", Upp: "
-            + approximation.getDistribution().getUpp();
+      return "- Station " + i + " completed: " + approximation.getDistribution();
    }
 
    private Map<Marking, BigDecimal> getSteadyStateMap() {

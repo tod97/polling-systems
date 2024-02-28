@@ -24,6 +24,11 @@ public class ExpolynomialDistribution extends Distribution {
             new OmegaBigDecimal(String.valueOf(upp)));
    }
 
+   @Override
+   public String toString() {
+      return "ExpolynomialDistribution [bodyLambda=" + bodyLambda + ", delta=" + delta + ", upp=" + upp + "]";
+   }
+
    public double getBodyLambda() {
       return bodyLambda;
    }

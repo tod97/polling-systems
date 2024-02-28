@@ -19,4 +19,9 @@ public class DeterministicDistribution extends Distribution {
    public StochasticTransitionFeature getStochasticTransitionFeature() {
       return StochasticTransitionFeature.newDeterministicInstance(value, weight);
    }
+
+   @Override
+   public String toString() {
+      return "DeterministicDistribution [value=" + value + ", weight=" + weight + "]";
+   }
 }

@@ -19,4 +19,9 @@ public class ExponentialDistribution extends Distribution {
    public StochasticTransitionFeature getStochasticTransitionFeature() {
       return StochasticTransitionFeature.newExponentialInstance(expRate, clockRate);
    }
+
+   @Override
+   public String toString() {
+      return "ExponentialDistribution [expRate=" + expRate + ", clockRate=" + clockRate + "]";
+   }
 }

@@ -18,4 +18,9 @@ public class UniformDistribution extends Distribution {
    public StochasticTransitionFeature getStochasticTransitionFeature() {
       return StochasticTransitionFeature.newUniformInstance(eft, lft);
    }
+
+   @Override
+   public String toString() {
+      return "UniformDistribution [eft=" + eft + ", lft=" + lft + "]";
+   }
 }
