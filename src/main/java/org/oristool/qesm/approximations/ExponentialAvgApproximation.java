@@ -1,17 +1,10 @@
 package org.oristool.qesm.approximations;
 
-import org.apache.commons.math3.analysis.differentiation.DerivativeStructure;
-import org.apache.commons.math3.analysis.differentiation.UnivariateDifferentiableFunction;
-import org.apache.commons.math3.analysis.solvers.NewtonRaphsonSolver;
-import org.apache.commons.math3.exception.DimensionMismatchException;
 import org.oristool.models.stpn.MarkingExpr;
 import org.oristool.models.stpn.trees.StochasticTransitionFeature;
-import org.oristool.petrinet.PetriNet;
 import org.oristool.qesm.distributions.ExponentialDistribution;
 
 import java.math.BigDecimal;
-import java.math.RoundingMode;
-import java.util.Arrays;
 import java.util.stream.IntStream;
 
 public class ExponentialAvgApproximation extends Approximation {
@@ -43,7 +36,8 @@ public class ExponentialAvgApproximation extends Approximation {
       double bodyLambda = 1 / mean;
 
       // TODO
-      this.distribution = new ExponentialDistribution(new BigDecimal(0), MarkingExpr.from("1", new PetriNet()));
+      this.distribution = new ExponentialDistribution(new BigDecimal(bodyLambda),
+            MarkingExpr.ONE);
       feature = this.distribution.getStochasticTransitionFeature();
 
       return feature;

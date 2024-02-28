@@ -72,6 +72,7 @@ public class Main {
                }
             }
 
+            System.out.println(newDistribution);
             if (newDistribution instanceof ExpolynomialDistribution) {
                ExpolynomialDistribution expDist = (ExpolynomialDistribution) newDistribution;
                bodyLamdaSeries.get(i).add(count + 1, expDist.getBodyLambda());
