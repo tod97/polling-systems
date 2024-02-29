@@ -39,6 +39,13 @@ public class Main {
          uppSeries.add(new XYSeries("Station " + (i + 1)));
       }
 
+      /* for (int i = 0; i < stations.size(); i++) {
+         Station station = stations.get(i);
+         double[] newCDF = station.exec(BigDecimal.ZERO);
+         station.approxCDF(newCDF);
+         station.setCDF(newCDF);
+      } */
+
       // EXECUTE APPROXIMATION
       for (int count = 0; count < nIterations; count++) {
          nStationCompleted = 0;
@@ -57,9 +64,8 @@ public class Main {
 
             Distribution oldDistribution = station.approximation.getDistribution();
             station.updatePNWithOtherStations(otherStations);
-            /* station.setUpTime(
-                  station.getUpTime().add(station.getUpTime().multiply(BigDecimal.valueOf(count + 1)))); */
-            //double[] newCDF = station.exec(additionalUpTime);
+
+            // ACTIVATE ADDITIONALUPTIME double[] newCDF = station.exec(additionalUpTime);
             double[] newCDF = station.exec(BigDecimal.ZERO);
             station.approxCDF(newCDF);
             station.setCDF(newCDF);
