@@ -8,16 +8,14 @@ import org.oristool.models.stpn.trees.StochasticTransitionFeature;
 public class ExponentialDistribution extends Distribution {
 
    BigDecimal expRate;
-   MarkingExpr clockRate;
 
-   public ExponentialDistribution(BigDecimal expRate, MarkingExpr clockRate) {
+   public ExponentialDistribution(BigDecimal expRate) {
       this.expRate = expRate;
-      this.clockRate = clockRate;
    }
 
    @Override
    public StochasticTransitionFeature getStochasticTransitionFeature() {
-      return StochasticTransitionFeature.newExponentialInstance(expRate, clockRate);
+      return StochasticTransitionFeature.newExponentialInstance(expRate);
    }
 
    @Override
@@ -30,7 +28,7 @@ public class ExponentialDistribution extends Distribution {
 
    @Override
    public String toString() {
-      return "ExponentialDistribution [expRate=" + expRate + ", clockRate=" + clockRate + "]";
+      return "ExponentialDistribution [expRate=" + expRate + "]";
    }
 
    public BigDecimal getExpRate() {
@@ -39,13 +37,5 @@ public class ExponentialDistribution extends Distribution {
 
    public void setExpRate(BigDecimal expRate) {
       this.expRate = expRate;
-   }
-
-   public MarkingExpr getClockRate() {
-      return clockRate;
-   }
-
-   public void setClockRate(MarkingExpr clockRate) {
-      this.clockRate = clockRate;
    }
 }

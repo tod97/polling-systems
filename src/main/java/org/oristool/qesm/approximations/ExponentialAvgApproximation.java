@@ -35,9 +35,7 @@ public class ExponentialAvgApproximation extends Approximation {
 
       double bodyLambda = 1 / mean;
 
-      // TODO
-      this.distribution = new ExponentialDistribution(new BigDecimal(bodyLambda),
-            MarkingExpr.ONE);
+      this.distribution = new ExponentialDistribution(new BigDecimal(bodyLambda));
       feature = this.distribution.getStochasticTransitionFeature();
 
       return feature;

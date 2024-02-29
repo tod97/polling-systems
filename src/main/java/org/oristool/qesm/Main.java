@@ -59,7 +59,8 @@ public class Main {
             station.updatePNWithOtherStations(otherStations);
             /* station.setUpTime(
                   station.getUpTime().add(station.getUpTime().multiply(BigDecimal.valueOf(count + 1)))); */
-            double[] newCDF = station.exec(additionalUpTime);
+            //double[] newCDF = station.exec(additionalUpTime);
+            double[] newCDF = station.exec(BigDecimal.ZERO);
             station.approxCDF(newCDF);
             station.setCDF(newCDF);
             Distribution newDistribution = station.approximation.getDistribution();
