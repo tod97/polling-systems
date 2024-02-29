@@ -39,12 +39,12 @@ public class Main {
          uppSeries.add(new XYSeries("Station " + (i + 1)));
       }
 
-      /* for (int i = 0; i < stations.size(); i++) {
+      for (int i = 0; i < stations.size(); i++) {
          Station station = stations.get(i);
          double[] newCDF = station.exec(BigDecimal.ZERO);
-         station.approxCDF(newCDF);
+         //station.approxCDF(newCDF);
          station.setCDF(newCDF);
-      } */
+      }
 
       // EXECUTE APPROXIMATION
       for (int count = 0; count < nIterations; count++) {

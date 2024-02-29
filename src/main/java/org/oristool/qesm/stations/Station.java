@@ -16,6 +16,7 @@ import org.oristool.petrinet.Marking;
 import org.oristool.petrinet.MarkingCondition;
 import org.oristool.petrinet.PetriNet;
 import org.oristool.qesm.approximations.TruncatedExponentialApproximation;
+import org.oristool.qesm.distributions.ExpolynomialDistribution;
 
 public abstract class Station {
    private BigDecimal upTime = new BigDecimal("15");
@@ -33,6 +34,7 @@ public abstract class Station {
    public Station() {
       buildStation();
       this.approximation = new TruncatedExponentialApproximation();
+      this.feature = new ExpolynomialDistribution(2.4, 1, 10).getStochasticTransitionFeature();
    }
 
    public String report(int i) {
