@@ -15,7 +15,7 @@ import org.oristool.models.stpn.trees.StochasticTransitionFeature;
 import org.oristool.petrinet.Marking;
 import org.oristool.petrinet.MarkingCondition;
 import org.oristool.petrinet.PetriNet;
-import org.oristool.qesm.approximations.TruncatedExponentialApproximation;
+import org.oristool.qesm.approximations.ExponentialAvgApproximation;
 import org.oristool.qesm.distributions.ExpolynomialDistribution;
 
 public abstract class Station {
@@ -24,7 +24,7 @@ public abstract class Station {
    protected PetriNet net;
    protected Marking marking;
    private double[] CDF;
-   public TruncatedExponentialApproximation approximation;
+   public ExponentialAvgApproximation approximation;
    public StochasticTransitionFeature feature;
 
    public abstract void updatePNWithOtherStations(List<Station> stations);
@@ -33,7 +33,7 @@ public abstract class Station {
 
    public Station() {
       buildStation();
-      this.approximation = new TruncatedExponentialApproximation();
+      this.approximation = new ExponentialAvgApproximation();
       this.feature = new ExpolynomialDistribution(2.4, 1, 10).getStochasticTransitionFeature();
    }
 
@@ -106,32 +106,6 @@ public abstract class Station {
       return resultCDF.stream().mapToDouble(Double::doubleValue).toArray();
    }
 
-   public double[] exec1(BigDecimal additionalUpTime) {
-      String cond = "pEnd > 0";
-      this.upTime = additionalUpTime.doubleValue() > 0 ? additionalUpTime : this.upTime;
-      System.out.println(this.upTime);
-
-      RegTransient analysis = RegTransient.builder()
-            .localEvaluationPeriod(1)
-            .globalEvaluationPeriod(1)
-            .greedyPolicy(this.upTime, new BigDecimal(0))
-            .timeStep(this.upTime.divide(new BigDecimal("100")))
-            .build();
-
-      TransientSolution<DeterministicEnablingState, Marking> solution = analysis.compute(net, marking);
-      TransientSolution<DeterministicEnablingState, RewardRate> rewardSolution = TransientSolution.computeRewards(false,
-            solution,
-            RewardRate.fromString(cond));
-
-      double[] CDF = new double[rewardSolution.getSolution().length];
-
-      for (int i = 0; i < CDF.length; i++) {
-         CDF[i] = rewardSolution.getSolution()[i][0][0];
-      }
-
-      return CDF;
-   }
-
    public StochasticTransitionFeature approxCDF(double[] CDF) {
       System.out.println(this.getClass().getSimpleName() + " - [" + CDF[0] + ", " + CDF[1] + ", " + CDF[2] + ", ..., "
             + CDF[CDF.length - 3] + ", " + CDF[CDF.length - 2] + ", " + CDF[CDF.length - 1] + "]");
@@ -140,13 +114,13 @@ public abstract class Station {
       int count = 0;
       double epsilon = 1E-3;
       for (int i = 0; i < CDF.length; i++) {
-         if (CDF[i] > 0) {
-            count++;
-            subCDF.add(CDF[i]);
-            if (CDF[i] > 1 - epsilon) {
-               break;
-            }
+         //if (CDF[i] > 0) {
+         count++;
+         subCDF.add(CDF[i]);
+         if (CDF[i] > 1 - epsilon) {
+            break;
          }
+         //}
       }
       double[] newCDF = subCDF.stream().mapToDouble(Double::doubleValue).toArray();
       double step = this.upTime.doubleValue() / (CDF.length - 1);
