@@ -58,10 +58,6 @@ public abstract class Station {
       return m;
    }
 
-   public double[] getTransientCDF() {
-      return this.getTransientCDF(this.net, this.marking);
-   }
-
    private double[] getTransientCDF(PetriNet net, Marking marking) {
       String cond = "p0==0";
       RegTransient analysis = RegTransient.builder()
